@@ -1,7 +1,8 @@
 package com.example.administrator.geekcoffee;
 
+import android.app.AlertDialog;
 import android.content.Context;
-import android.content.res.Resources;
+import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
@@ -11,8 +12,8 @@ import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,10 +37,6 @@ class StaggeredHomeAdapter extends
 
 		void onItemLongClick(View view, int position);
 
-        void onColdClick(View view, int position);
-
-        void onHotClick(View view, int position);
-
         void onNumAddClick(View view, int position);
 
         void onNumCutClick(View view, int position);
@@ -60,14 +57,14 @@ class StaggeredHomeAdapter extends
         mConsumption=new Consumption();
         mSum = new ArrayList<Integer>();
 		mHeights = new ArrayList<Integer>();
-        //mdetail=new int[getItemCount()][10];
+        mdetail=new int[getItemCount()][10];
 		for (int i = 0; i < mDatas.size(); i++)
 		{
             mSum.add(0);
-			mHeights.add( (int) (100 + Math.random() * 300));
-            /*for(int j=0;j<10;j++){
+			mHeights.add( (int) (350 + Math.random() * 300));
+            for(int j=0;j<10;j++){
                 mdetail[i][j]=0;
-            }*/
+            }
 		}
 	}
 
@@ -82,14 +79,13 @@ class StaggeredHomeAdapter extends
 	@Override
 	public void onBindViewHolder(final MyViewHolder holder, final int position)
 	{
-		LayoutParams lp = holder.tv_num.getLayoutParams();
+		LayoutParams lp = holder.custom_cross.getLayoutParams();
 		lp.height = mHeights.get(position);
-		
-		holder.tv_num.setLayoutParams(lp);
-		holder.tv_num.setText(mDatas.get(position));
-        holder.num_cut.setVisibility(View.INVISIBLE);
-        holder.cold.setVisibility(View.INVISIBLE);
-        holder.hot.setVisibility(View.INVISIBLE);
+		holder.tv_item.setLayoutParams(lp);
+		holder.tv_item.setText(mDatas.get(position));
+        holder.tv_temp.setVisibility(View.INVISIBLE);
+        holder.tv_sum.setVisibility(View.INVISIBLE);
+        holder.btn_cut.setVisibility(View.INVISIBLE);
 
 		// 如果设置了回调，则设置点击事件
 		if (mOnItemClickLitener != null)
@@ -116,68 +112,54 @@ class StaggeredHomeAdapter extends
 				}
 			});
 
-            holder.num_cut.setOnClickListener(new OnClickListener(){
+            holder.btn_cut.setOnClickListener(new OnClickListener(){
                 @Override
                 public void onClick(View v)
                 {
                     int pos = holder.getLayoutPosition();
                     mOnItemClickLitener.onNumCutClick(holder.itemView, pos);
                     if(mSum.get(pos)==1){
-                        holder.cold.setVisibility(View.INVISIBLE);
-                        holder.hot.setVisibility(View.INVISIBLE);
-                        holder.num_cut.setVisibility(View.INVISIBLE);
+                        /*holder.cold.setVisibility(View.INVISIBLE);
+                        holder.hot.setVisibility(View.INVISIBLE);*/
+                        holder.btn_cut.setVisibility(View.INVISIBLE);
+                        holder.tv_sum.setVisibility(View.INVISIBLE);
+                        holder.tv_temp.setVisibility(View.INVISIBLE);
+                        holder.tv_temp.setText("");
                     }else{
-                        /*switch (mdetail[pos][mSum.get(pos)-2]){//恢复上一次选择的选项
+                        switch (mdetail[pos][mSum.get(pos)-2]){//恢复上一次选择的选项
                             case 1:
-                                holder.cold.setBackgroundColor(now.getResources().getColor(R.color.color_item_normal));
+                                holder.tv_temp.setText("冷");
                                 break;
                             case 2:
-                                holder.hot.setBackgroundColor(now.getResources().getColor(R.color.color_item_normal));
+                                holder.tv_temp.setText("热");
                                 break;
                             case 0:
-                                break;
-                            default:
-                                break;
-                        }*/
-                    }
-                    //mdetail[pos][mSum.get(pos)-1]=0;
-                    mAmount--;
-                    mSum.set(pos,mSum.get(pos)-1);//减少定的个数
-                    /*if(mSum.get(pos)==1){
-                        holder.cold.setVisibility(View.INVISIBLE);
-                        holder.hot.setVisibility(View.INVISIBLE);
-                        holder.num_cut.setVisibility(View.INVISIBLE);
-                    }else{
-                        switch (mConsumption.getIsHot(mSum.get(pos)-1)){
-                            case 0:
-                                holder.cold.setBackgroundColor(now.getResources().getColor(R.color.color_item_normal));
-                                break;
-                            case 1:
-                                holder.hot.setBackgroundColor(now.getResources().getColor(R.color.color_item_normal));
                                 break;
                             default:
                                 break;
                         }
-
                     }
-                    mConsumption.remove(mSum.get(pos));
+                    mdetail[pos][mSum.get(pos)-1]=0;
                     mAmount--;
-                    mSum.set(pos,mSum.get(pos)-1);*/
+                    mSum.set(pos,mSum.get(pos)-1);//减少定的个数
+                    if(mSum.get(pos)==0){
+                        holder.tv_sum.setText("");
+                    }else{
+                        holder.tv_sum.setText("共 "+mSum.get(pos)+" 个");
+                    }
                 }
             });
 
-            holder.num_add.setOnClickListener(new OnClickListener(){
+            holder.btn_add.setOnClickListener(new OnClickListener(){
                 @Override
                 public void onClick(View v)
                 {
-                    int pos = holder.getLayoutPosition();
+                    final int pos = holder.getLayoutPosition();
                     mOnItemClickLitener.onNumAddClick(holder.itemView, pos);
                     if(mSum.get(pos)==0){
-                        holder.cold.setVisibility(View.VISIBLE);
-                        holder.hot.setVisibility(View.VISIBLE);
-                        holder.num_cut.setVisibility(View.VISIBLE);
-                        /*mSum.set(pos,mSum.get(pos)+1);//增加定的个数
-                        mAmount++;*/
+                        holder.btn_cut.setVisibility(View.VISIBLE);
+                        holder.tv_sum.setVisibility(View.VISIBLE);
+                        holder.tv_temp.setVisibility(View.VISIBLE);
                     }else{
                         /*if(mdetail[pos][mSum.get(pos)-1]==0){
                             Toast.makeText(now,"",Toast.LENGTH_SHORT).show();//提示
@@ -187,38 +169,30 @@ class StaggeredHomeAdapter extends
 
                         }*/
                     }
-                    mSum.set(pos,mSum.get(pos)+1);//增加定的个数
-                    mAmount++;
-                }
-            });
-
-            holder.cold.setOnClickListener(new OnClickListener(){
-                @Override
-                public void onClick(View v)
-                {
-                    int pos = holder.getLayoutPosition();
-                    mOnItemClickLitener.onColdClick(holder.itemView, pos);
-                    //mdetail[pos][mSum.get(pos)]=1;
-                    holder.hot.setBackgroundColor(now.getResources().getColor(R.color.transparent));
-                    holder.cold.setBackgroundColor(now.getResources().getColor(R.color.color_item_normal));
-                    /*if(mdetail[pos][mSum.get(pos)]==0){//未设置冷热
-
-                    }*/
-                }
-            });
-
-            holder.hot.setOnClickListener(new OnClickListener(){
-                @Override
-                public void onClick(View v)
-                {
-                    int pos = holder.getLayoutPosition();
-                    mOnItemClickLitener.onHotClick(holder.itemView, pos);
-                    //mdetail[pos][mSum.get(pos)]=2;
-                    holder.cold.setBackgroundColor(now.getResources().getColor(R.color.transparent));
-                    holder.hot.setBackgroundColor(now.getResources().getColor(R.color.color_item_normal));
-                    /*if(mdetail[pos][mSum.get(pos)]==0){//未设置冷热
-
-                    }*/
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(now);
+                    dialog.setTitle("选择冷热");
+                    dialog.setCancelable(false);
+                    dialog.setPositiveButton("热", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mdetail[pos][mSum.get(pos)]=2;
+                            mSum.set(pos,mSum.get(pos)+1);//增加定的个数
+                            mAmount++;
+                            holder.tv_temp.setText("热");
+                            holder.tv_sum.setText("共 "+mSum.get(pos)+" 个");
+                        }
+                    });
+                    dialog.setNegativeButton("冷", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mdetail[pos][mSum.get(pos)]=1;
+                            mSum.set(pos,mSum.get(pos)+1);//增加定的个数
+                            mAmount++;
+                            holder.tv_temp.setText("冷");
+                            holder.tv_sum.setText("共 "+mSum.get(pos)+" 个");
+                        }
+                    });
+                    dialog.show();
                 }
             });
 		}
@@ -233,7 +207,11 @@ class StaggeredHomeAdapter extends
 	public void addData(int position)
 	{
 		mDatas.add(position, "Insert One");
-		mHeights.add( (int) (100 + Math.random() * 300));
+		mHeights.add( (int) (350 + Math.random() * 300));//3:100+Math.random()*300
+        mSum.add(0);
+        int[][] temp = new int[getItemCount()][10];
+        System.arraycopy(mdetail,0,temp,0,mdetail.length);
+        mdetail=temp;
 		notifyItemInserted(position);
 	}
 
@@ -242,12 +220,6 @@ class StaggeredHomeAdapter extends
 		mDatas.remove(position);
 		notifyItemRemoved(position);
 	}
-
-    public void confirmOne(int pos){
-        mAmount++;
-        mSum.set(pos,mSum.get(pos)+1);
-        Toast.makeText(now,"已定下该项"+mSum.get(pos)+"个",Toast.LENGTH_SHORT).show();
-    }
 
     public ArrayList<String> getResult(){
         ArrayList<String> result = new ArrayList();
@@ -261,31 +233,29 @@ class StaggeredHomeAdapter extends
 
 	class MyViewHolder extends ViewHolder
 	{
-
-		TextView tv_num;
-        //TextView tv_sum;
-        Button num_cut;
-        Button num_add;
-        Button cold;
-        Button hot;
+        RelativeLayout custom_cross;
+		TextView tv_item;
+        TextView tv_sum;
+        TextView tv_temp;
+        Button btn_cut;
+        Button btn_add;
 
 		public MyViewHolder(View view)
 		{
 			super(view);
-            tv_num = (TextView) view.findViewById(R.id.id_num);
-            //tv_sum = (TextView) view.findViewById(R.id.id_sum);
-            num_cut = (Button) view.findViewById(R.id.num_cut);
-            num_add = (Button) view.findViewById(R.id.num_add);
-            cold = (Button) view.findViewById(R.id.cold);
-            hot = (Button) view.findViewById(R.id.hot);
+            custom_cross = (RelativeLayout) view.findViewById(R.id.cross);
+            tv_item = (TextView) view.findViewById(R.id.tv_item);
+            tv_sum = (TextView) view.findViewById(R.id.tv_sum);
+            tv_temp = (TextView) view.findViewById(R.id.tv_temp);
+            btn_cut = (Button) view.findViewById(R.id.btn_cut);
+            btn_add = (Button) view.findViewById(R.id.btn_add);
+            
 		}
 	}
     class Consumption {//订单类一个订单对应一个实体商品
         private int[] id;//对应外部pos
         private int[] sum;
-        /*private int[] coldNum;
-        private int[] hotNum;*/
-        //pos,mDatas.get(pos),2
+
         public void setAll(int id, int sum){
             if(mAmount==0){
                 this.id=new int[30];
@@ -293,15 +263,9 @@ class StaggeredHomeAdapter extends
                 /*this.coldNum=new int[30];
                 this.hotNum=new int[30];*/
             }
-            /*if(isHot){
-                this.hotNum[]++;
-            }else{
-                this.coldNum[]++;
-            }*/
+
             this.id[mAmount] = id;
             this.sum[mAmount] = sum;
-            /*this.coldNum[mAmount] = coldNum;
-            this.hotNum[mAmount] = hotNum;*/
         }
 
         public int getId(int position) {
@@ -311,40 +275,6 @@ class StaggeredHomeAdapter extends
         public void setId(int position, int id) {
             this.id[position] = id;
         }
-
-       /* public int[] getColdNum() {
-            return coldNum;
-        }
-
-        public void setColdNum(int[] coldNum) {
-            this.coldNum = coldNum;
-        }
-
-        public int[] getHotNum() {
-            return hotNum;
-        }
-
-        public void setHotNum(int[] hotNum) {
-            this.hotNum = hotNum;
-        }
-
-        public void remove(){
-            id[mAmount]=-1;
-            coldNum[mAmount]--;
-            hotNum[mAmount]--;
-        }
-
-        public void removeAll(){
-            for(int i=0;i<id.length;i++){
-                id[i]=-1;
-                coldNum[i]--;
-                hotNum[i]--;
-            }
-        }
-        //返回某一类型的商品的订单数
-        public int sum(int pos){
-            return coldNum[pos]+hotNum[pos];
-        }*/
 
         public int[] getSum() {
             return sum;

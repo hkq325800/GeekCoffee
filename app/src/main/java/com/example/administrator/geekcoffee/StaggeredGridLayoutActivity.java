@@ -34,7 +34,7 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity
 		mRecyclerView = (RecyclerView) findViewById(R.id.id_recyclerview);
 		mStaggeredHomeAdapter = new StaggeredHomeAdapter(this, mDatas);
 
-		mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3,
+		mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,
 				StaggeredGridLayoutManager.VERTICAL));
 		mRecyclerView.setAdapter(mStaggeredHomeAdapter);
 		// 设置item动画
@@ -106,7 +106,7 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity
 		switch (item.getItemId())
 		{
 		case R.id.id_action_add:
-			mStaggeredHomeAdapter.addData(1);
+			mStaggeredHomeAdapter.addData(mDatas.size());
 			break;
 		case R.id.id_action_delete:
 			//mStaggeredHomeAdapter.removeData(1);
