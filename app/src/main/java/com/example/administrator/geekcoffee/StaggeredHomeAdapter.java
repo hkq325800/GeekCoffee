@@ -83,9 +83,31 @@ class StaggeredHomeAdapter extends
 		lp.height = mHeights.get(position);
 		holder.tv_item.setLayoutParams(lp);
 		holder.tv_item.setText(mDatas.get(position));
-        holder.tv_temp.setVisibility(View.INVISIBLE);
-        holder.tv_sum.setVisibility(View.INVISIBLE);
-        holder.btn_cut.setVisibility(View.INVISIBLE);
+        if(mSum.get(position)==0){
+            holder.tv_temp.setVisibility(View.INVISIBLE);
+            holder.tv_sum.setVisibility(View.INVISIBLE);
+            holder.btn_cut.setVisibility(View.INVISIBLE);
+            holder.tv_sum.setText("");
+            holder.tv_temp.setText("");
+        }else{
+            holder.tv_temp.setVisibility(View.VISIBLE);
+            holder.tv_sum.setVisibility(View.VISIBLE);
+            holder.btn_cut.setVisibility(View.VISIBLE);
+            switch (mdetail[position][mSum.get(position)-1]){//恢复上一次选择的选项
+                case 1:
+                    holder.tv_temp.setText("冷");
+                    break;
+                case 2:
+                    holder.tv_temp.setText("热");
+                    break;
+                case 0:
+                    break;
+                default:
+                    break;
+            }
+            holder.tv_sum.setText("共 "+mSum.get(position)+" 个");
+        }
+
 
 		// 如果设置了回调，则设置点击事件
 		if (mOnItemClickLitener != null)
@@ -118,6 +140,7 @@ class StaggeredHomeAdapter extends
                 {
                     int pos = holder.getLayoutPosition();
                     mOnItemClickLitener.onNumCutClick(holder.itemView, pos);
+
                     if(mSum.get(pos)==1){
                         /*holder.cold.setVisibility(View.INVISIBLE);
                         holder.hot.setVisibility(View.INVISIBLE);*/
@@ -156,6 +179,7 @@ class StaggeredHomeAdapter extends
                 {
                     final int pos = holder.getLayoutPosition();
                     mOnItemClickLitener.onNumAddClick(holder.itemView, pos);
+
                     if(mSum.get(pos)==0){
                         holder.btn_cut.setVisibility(View.VISIBLE);
                         holder.tv_sum.setVisibility(View.VISIBLE);
@@ -171,7 +195,17 @@ class StaggeredHomeAdapter extends
                     }
                     AlertDialog.Builder dialog = new AlertDialog.Builder(now);
                     dialog.setTitle("选择冷热");
-                    dialog.setCancelable(false);
+                    dialog.setCancelable(true);
+                    dialog.setOnCancelListener(new DialogInterface.OnCancelListener(){
+                        @Override
+                        public void onCancel(DialogInterface dialog){
+                            if(mSum.get(pos)==0){
+                                holder.btn_cut.setVisibility(View.INVISIBLE);
+                                holder.tv_sum.setVisibility(View.INVISIBLE);
+                                holder.tv_temp.setVisibility(View.INVISIBLE);
+                            }
+                        }
+                    });
                     dialog.setPositiveButton("热", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -210,7 +244,7 @@ class StaggeredHomeAdapter extends
 		mHeights.add( (int) (350 + Math.random() * 300));//3:100+Math.random()*300
         mSum.add(0);
         int[][] temp = new int[getItemCount()][10];
-        System.arraycopy(mdetail,0,temp,0,mdetail.length);
+        System.arraycopy(mdetail,0,temp,0,mdetail.length);//
         mdetail=temp;
 		notifyItemInserted(position);
 	}

@@ -62,7 +62,7 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity
 						position + " long click", Toast.LENGTH_SHORT).show();
 			}
 
-            @Override
+            /*@Override
             public void onColdClick(View view, int position) {
 
             }
@@ -70,7 +70,7 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity
             @Override
             public void onHotClick(View view, int position) {
 
-            }
+            }*/
 
             @Override
             public void onNumAddClick(View view, int position) {
@@ -87,7 +87,7 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity
 	protected void initData()
 	{
 		mDatas = new ArrayList<String>();
-		for (int i = 'A'; i < 'z'; i++)
+		for (int i = 'A'; i < 'Z'; i++)
 		{
 			mDatas.add("" + (char) i);
 		}
