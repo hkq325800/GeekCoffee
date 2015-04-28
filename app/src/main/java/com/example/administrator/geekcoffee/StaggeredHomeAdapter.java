@@ -142,8 +142,6 @@ class StaggeredHomeAdapter extends
                     mOnItemClickLitener.onNumCutClick(holder.itemView, pos);
 
                     if(mSum.get(pos)==1){
-                        /*holder.cold.setVisibility(View.INVISIBLE);
-                        holder.hot.setVisibility(View.INVISIBLE);*/
                         holder.btn_cut.setVisibility(View.INVISIBLE);
                         holder.tv_sum.setVisibility(View.INVISIBLE);
                         holder.tv_temp.setVisibility(View.INVISIBLE);
@@ -184,14 +182,6 @@ class StaggeredHomeAdapter extends
                         holder.btn_cut.setVisibility(View.VISIBLE);
                         holder.tv_sum.setVisibility(View.VISIBLE);
                         holder.tv_temp.setVisibility(View.VISIBLE);
-                    }else{
-                        /*if(mdetail[pos][mSum.get(pos)-1]==0){
-                            Toast.makeText(now,"",Toast.LENGTH_SHORT).show();//提示
-                        }else{
-                            holder.cold.setBackgroundColor(now.getResources().getColor(R.color.transparent));
-                            holder.hot.setBackgroundColor(now.getResources().getColor(R.color.transparent));
-
-                        }*/
                     }
                     AlertDialog.Builder dialog = new AlertDialog.Builder(now);
                     dialog.setTitle("选择冷热");
@@ -244,7 +234,7 @@ class StaggeredHomeAdapter extends
 		mHeights.add( (int) (350 + Math.random() * 300));//3:100+Math.random()*300
         mSum.add(0);
         int[][] temp = new int[getItemCount()][10];
-        System.arraycopy(mdetail,0,temp,0,mdetail.length);//
+        System.arraycopy(mdetail,0,temp,0,mdetail.length);//数组扩充
         mdetail=temp;
 		notifyItemInserted(position);
 	}
@@ -252,6 +242,11 @@ class StaggeredHomeAdapter extends
 	public void removeData(int position)
 	{
 		mDatas.remove(position);
+        mHeights.remove(position);
+        mSum.remove(position);
+        for(int i=position;i<getItemCount();i++){
+            mdetail[i]=mdetail[i+1];
+        }
 		notifyItemRemoved(position);
 	}
 
@@ -294,8 +289,6 @@ class StaggeredHomeAdapter extends
             if(mAmount==0){
                 this.id=new int[30];
                 this.sum=new int[30];
-                /*this.coldNum=new int[30];
-                this.hotNum=new int[30];*/
             }
 
             this.id[mAmount] = id;
