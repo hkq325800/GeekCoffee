@@ -128,10 +128,6 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity
                 }
             }
         });
-		/*for (int i = 'A'; i < 'Z'; i++)
-		{
-			mDatas.add("" + (char) i);
-		}*/
 	}
 
 	@Override
@@ -146,15 +142,23 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity
 	{
 		switch (item.getItemId())
 		{
-		case R.id.id_action_add:
-			mStaggeredHomeAdapter.addData(mDatas.size());
-			break;
-		case R.id.id_action_delete:
-			//mStaggeredHomeAdapter.removeData(1);
-            Intent intent = new Intent(this , ResultActivity.class);
-            intent.putStringArrayListExtra("extra_data", mStaggeredHomeAdapter.getResult());
-            startActivity(intent);
-			break;
+            case R.id.id_action_add:
+                mStaggeredHomeAdapter.addData(mDatas.size());
+                break;
+            case R.id.id_action_delete:
+                //mStaggeredHomeAdapter.removeData(1);
+                Intent intent = new Intent(this , ResultActivity.class);
+                intent.putStringArrayListExtra("extra_data", mStaggeredHomeAdapter.getResult());
+                startActivity(intent);
+                break;
+            case R.id.id_action_reload:
+                int j=mDatas.size();
+                for(int i=0;i<j;i++){
+                    mStaggeredHomeAdapter.removeData(0);
+                }
+                LeanSave();
+                initData();
+                break;
 		}
 		return true;
 	}

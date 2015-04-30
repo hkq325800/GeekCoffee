@@ -29,12 +29,8 @@ class StaggeredHomeAdapter extends
     private LayoutInflater mInflater;//layout
     private List<Integer> mHeights;
     private List<AVObject> mResult;//一次查询后的缓存
-    private Consumption mConsumption;
-	private List<String> mDatas;//每一组商品的名称
-    private List<Integer> mSum;//将每一组的个数记录下来
-    private int[][] mdetail;//用来存储每项商品的预定详情
-    private int mAmount=0;//pos是标明商品种类 mAmount是当前已定的商品总数
-    //也为Consumption类中数组的pos
+    private Consumption mCon;
+    private List<String> mDatas;//每一组商品的名称
 
 	public interface OnItemClickLitener
 	{
@@ -60,16 +56,18 @@ class StaggeredHomeAdapter extends
         mInflater = LayoutInflater.from(context);
         mHeights = new ArrayList<Integer>();
         mResult=result;
-        //mConsumption=new Consumption();
-		mDatas = datas;
-        mSum = new ArrayList<Integer>();
-        mdetail=new int[getItemCount()][10];
-		for (int i = 0; i < mDatas.size(); i++)
+        mDatas=datas;
+        mCon=new Consumption();
+        /*mSum = new ArrayList<Integer>();
+        mdetail=new int[getItemCount()][10];*/
+		for (int i = 0; i < getItemCount(); i++)
 		{
             mHeights.add( (int) (350 + Math.random() * 300));
-            mSum.add(0);
+            mCon.initcoldNum();
+            mCon.inithotNum();
+            mCon.addmSum();
             for(int j=0;j<10;j++){
-                mdetail[i][j]=0;
+                mCon.getmdetail()[i][j]=0;
             }
 		}
 	}
@@ -89,7 +87,7 @@ class StaggeredHomeAdapter extends
 		lp.height = mHeights.get(pos);
 		holder.tv_item.setLayoutParams(lp);
 		holder.tv_item.setText(mDatas.get(pos));
-        if(mSum.get(pos)==0){
+        if(mCon.getmSum(pos)==0){
             holder.tv_temp.setVisibility(View.INVISIBLE);
             holder.tv_sum.setVisibility(View.INVISIBLE);
             holder.btn_cut.setVisibility(View.INVISIBLE);
@@ -99,7 +97,7 @@ class StaggeredHomeAdapter extends
             holder.tv_temp.setVisibility(View.VISIBLE);
             holder.tv_sum.setVisibility(View.VISIBLE);
             holder.btn_cut.setVisibility(View.VISIBLE);
-            switch (mdetail[pos][mSum.get(pos)-1]){//恢复上一次选择的选项
+            switch (mCon.getmdetail()[pos][mCon.getmSum(pos)-1]){//恢复上一次选择的选项
                 case 1:
                     holder.tv_temp.setText("冷");
                     break;
@@ -111,7 +109,7 @@ class StaggeredHomeAdapter extends
                 default:
                     break;
             }
-            holder.tv_sum.setText("共 "+mSum.get(pos)+" 个");
+            holder.tv_sum.setText("共 "+mCon.getmSum(pos)+" 个");
         }
 
 
@@ -147,13 +145,13 @@ class StaggeredHomeAdapter extends
                     int pos = holder.getLayoutPosition();
                     mOnItemClickLitener.onNumCutClick(holder.itemView, pos);
 
-                    if(mSum.get(pos)==1){
+                    if(mCon.getmSum(pos)==1){
                         holder.btn_cut.setVisibility(View.INVISIBLE);
                         holder.tv_sum.setVisibility(View.INVISIBLE);
                         holder.tv_temp.setVisibility(View.INVISIBLE);
                         holder.tv_temp.setText("");
                     }else{
-                        switch (mdetail[pos][mSum.get(pos)-2]){//恢复上一次选择的选项
+                        switch (mCon.getmdetail()[pos][mCon.getmSum(pos)-2]){//恢复上一次选择的选项
                             case 1:
                                 holder.tv_temp.setText("冷");
                                 break;
@@ -166,13 +164,13 @@ class StaggeredHomeAdapter extends
                                 break;
                         }
                     }
-                    mdetail[pos][mSum.get(pos)-1]=0;
-                    mAmount--;
-                    mSum.set(pos,mSum.get(pos)-1);//减少定的个数
-                    if(mSum.get(pos)==0){
+                    mCon.getmdetail()[pos][mCon.getmSum(pos)-1]=0;
+                    mCon.cutmAmount();
+                    mCon.setmSum(pos, mCon.getmSum(pos) - 1);//减少定的个数
+                    if(mCon.getmSum(pos)==0){
                         holder.tv_sum.setText("");
                     }else{
-                        holder.tv_sum.setText("共 "+mSum.get(pos)+" 个");
+                        holder.tv_sum.setText("共 "+mCon.getmSum(pos)+" 个");
                     }
                 }
             });
@@ -185,7 +183,7 @@ class StaggeredHomeAdapter extends
                     mOnItemClickLitener.onNumAddClick(holder.itemView, pos);
 
                     Boolean type = mResult.get(pos).getBoolean("type");
-                    if(mSum.get(pos)==0){
+                    if(mCon.getmSum(pos)==0){
                         holder.btn_cut.setVisibility(View.VISIBLE);
                         holder.tv_sum.setVisibility(View.VISIBLE);
                         holder.tv_temp.setVisibility(View.VISIBLE);
@@ -194,10 +192,10 @@ class StaggeredHomeAdapter extends
                         AlertDialog.Builder dialog = new AlertDialog.Builder(now);
                         dialog.setTitle("选择冷热");
                         dialog.setCancelable(true);
-                        dialog.setOnCancelListener(new DialogInterface.OnCancelListener(){
+                        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                             @Override
-                            public void onCancel(DialogInterface dialog){
-                                if(mSum.get(pos)==0){
+                            public void onCancel(DialogInterface dialog) {
+                                if (mCon.getmSum(pos) == 0) {
                                     holder.btn_cut.setVisibility(View.INVISIBLE);
                                     holder.tv_sum.setVisibility(View.INVISIBLE);
                                     holder.tv_temp.setVisibility(View.INVISIBLE);
@@ -208,26 +206,26 @@ class StaggeredHomeAdapter extends
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 holder.tv_temp.setText("热");
-                                mdetail[pos][mSum.get(pos)-1]=2;
-                                holder.tv_sum.setText("共 "+mSum.get(pos)+" 个");
+                                mCon.getmdetail()[pos][mCon.getmSum(pos) - 1] = 2;
+                                holder.tv_sum.setText("共 " + mCon.getmSum(pos) + " 个");
+                                mCon.addhotNum(pos);
                             }
                         });
                         dialog.setNegativeButton("冷", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 holder.tv_temp.setText("冷");
-                                mdetail[pos][mSum.get(pos)-1]=1;
-                                holder.tv_sum.setText("共 "+mSum.get(pos)+" 个");
+                                mCon.getmdetail()[pos][mCon.getmSum(pos) - 1] = 1;
+                                holder.tv_sum.setText("共 " + mCon.getmSum(pos) + " 个");
+                                mCon.addcoldNum(pos);
                             }
                         });
-                        mSum.set(pos,mSum.get(pos)+1);//增加定的个数
-                        mAmount++;
                         dialog.show();
                     }else{//若为蛋糕
-                        mSum.set(pos,mSum.get(pos)+1);
-                        mAmount++;
-                        holder.tv_sum.setText("共 "+mSum.get(pos)+" 个");
+                        holder.tv_sum.setText("共 "+(mCon.getmSum(pos)+1)+" 个");
                     }
+                    mCon.setmSum(pos,mCon.getmSum(pos)+1);
+                    mCon.addmAmount();
 
                 }
             });
@@ -244,10 +242,12 @@ class StaggeredHomeAdapter extends
 	{
 		mDatas.add(pos, "One");
 		mHeights.add( (int) (350 + Math.random() * 300));//3:100+Math.random()*300
-        mSum.add(0);
+        mCon.addmSum();
+        mCon.inithotNum();
+        mCon.initcoldNum();
         int[][] temp = new int[getItemCount()][10];
-        System.arraycopy(mdetail,0,temp,0,mdetail.length);//数组扩充
-        mdetail=temp;
+        System.arraycopy(mCon.getmdetail(),0,temp,0,mCon.getmdetail().length);//数组扩充
+        mCon.setmdetail(temp);
 
         AVObject Menu = new AVObject("Menu");
         int price = (int) (Math.random()*10+5);
@@ -267,14 +267,16 @@ class StaggeredHomeAdapter extends
 
 	public void removeData(int pos)
 	{
-		mDatas.remove(pos);
+        mDatas.remove(pos);
         mHeights.remove(pos);
-        mSum.remove(pos);
+        mCon.removemSum(pos);
+        mCon.removecoldNum(pos);
+        mCon.removehotNum(pos);
         int temp[][]=new int[getItemCount()][10];
         for(int i=0;i<getItemCount();i++){
-            temp[i]=i<pos?mdetail[i]:mdetail[i+1];
+            temp[i]=i<pos?mCon.getmdetail()[i]:mCon.getmdetail()[i+1];
         }
-        mdetail=temp;
+        mCon.setmdetail(temp);
         AVObject del = mResult.get(pos);
         del.deleteInBackground();
         mResult.remove(pos);
@@ -283,10 +285,18 @@ class StaggeredHomeAdapter extends
 
     public ArrayList<String> getResult(){
         ArrayList<String> result = new ArrayList();
-        for(int i=0;i<mDatas.size();i++){
-            if(mSum.get(i)!=0){//区分是否有预定
-                //if(mdetail[i][])//setHotNum/setColdNum
-                 result.add(mDatas.get(i)+"/"+mSum.get(i));
+        for(int i=0;i<getItemCount();i++){
+            if(mCon.getmSum(i)!=0){//区分是否有预定
+                 if(mResult.get(i).getBoolean("type")){//drink
+                     String hot;
+                     String cold;
+                     hot=mCon.gethotNum(i)!=0?"热："+mCon.gethotNum(i):"";
+                     cold=mCon.getcoldNum(i)!=0?"冷："+mCon.getcoldNum(i):"";
+                     result.add(mDatas.get(i)+hot+cold);
+                 }else{
+                     result.add(mDatas.get(i)+"总数："+mCon.getmSum(i));
+                 }
+
             }
         }
         return result;
@@ -314,33 +324,85 @@ class StaggeredHomeAdapter extends
 		}
 	}
     class Consumption {//订单类一个订单对应一个实体商品
-        private int[] id;//对应外部pos
-        private int[] sum;
-
-        public void setAll(int id, int sum){
-            if(mAmount==0){
-                this.id=new int[30];
-                this.sum=new int[30];
-            }
-
-            this.id[mAmount] = id;
-            this.sum[mAmount] = sum;
+        private List<Integer> mSum;//将每一组的个数记录下来
+        private int[][] mdetail;//用来存储每项商品的预定详情
+        private int mAmount=0;//pos是标明商品种类 mAmount是当前已定的商品总数
+        private List<Integer> hotNum;
+        private List<Integer> coldNum;
+        //也为Consumption类中数组的pos
+        public Consumption(){
+            mSum = new ArrayList<Integer>();
+            mdetail = new int[getItemCount()][10];
+            hotNum = new ArrayList<Integer>();
+            coldNum = new ArrayList<Integer>();
         }
 
-        public int getId(int pos) {
-            return id[pos];
+        public void addmSum(){
+            mSum.add(0);
         }
 
-        public void setId(int pos, int id) {
-            this.id[pos] = id;
+        public void removemSum(int pos){
+            mSum.remove(pos);
         }
 
-        public int[] getSum() {
-            return sum;
+        public Integer getmSum(int pos) {
+            return mSum.get(pos);
         }
 
-        public void setSum(int[] sum) {
-            this.sum = sum;
+        public void setmSum(int pos,int i) {
+            this.mSum.set(pos,i);
+        }
+
+        public int[][] getmdetail() {
+            return mdetail;
+        }
+
+        public void setmdetail(int[][] mdetail) {
+            this.mdetail = mdetail;
+        }
+
+        public int getmAmount(){
+            return mAmount;
+        }
+
+        public void cutmAmount() {
+            mAmount--;
+        }
+
+        public void addmAmount() {
+            mAmount++;
+        }
+
+        public void inithotNum(){
+            hotNum.add(0);
+        }
+        
+        public int gethotNum(int pos){
+            return hotNum.get(pos);
+        }
+
+        public void removehotNum(int pos){
+            hotNum.remove(pos);
+        }
+
+        public void addhotNum(int pos){
+            hotNum.set(pos,hotNum.get(pos)+1);
+        }
+
+        public void initcoldNum(){
+            coldNum.add(0);
+        }
+
+        public int getcoldNum(int pos){
+            return coldNum.get(pos);
+        }
+
+        public void removecoldNum(int pos){
+            coldNum.remove(pos);
+        }
+
+        public void addcoldNum(int pos){
+            coldNum.set(pos,coldNum.get(pos)+1);
         }
     }
 

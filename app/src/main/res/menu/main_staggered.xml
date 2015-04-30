@@ -4,6 +4,12 @@
     tools:context="com.zhy.sample.demo_recyclerview.MainActivity" >
 
     <item
+        android:id="@+id/id_action_reload"
+        android:icon="@drawable/ic_launcher"
+        android:orderInCategory="100"
+        android:title="reload"
+        app:showAsAction="ifRoom"/>
+    <item
         android:id="@+id/id_action_add"
         android:icon="@drawable/actionbar_add_icon"
         android:orderInCategory="100"
