@@ -30,12 +30,18 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity
 	private List<String> mDatas;
     private List<AVObject> mResult;
 	private StaggeredHomeAdapter mStaggeredHomeAdapter;
+    private int Amount;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_recyclerview);
+        /*Intent intent = getIntent();
+        String str = intent.getStringExtra("extra_data");
+        if(str!=""&&str!=null){
+            Toast.makeText(this,str,Toast.LENGTH_SHORT).show();
+        }*/
 
         setupAVOSCloud(false);
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads().detectDiskWrites().detectNetwork().penaltyLog().build());
@@ -43,12 +49,6 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity
         //LeanSave();生成第一批数据
 
         initData();//init mDatas
-
-
-
-
-
-
 	}
 
     private void LeanSave() {
@@ -155,8 +155,12 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity
                 break;
             case R.id.id_action_delete:
                 //mStaggeredHomeAdapter.removeData(1);
+                if(mStaggeredHomeAdapter.getAmount()==0){
+                    break;
+                }
                 Intent intent = new Intent(this , ResultActivity.class);
-                intent.putStringArrayListExtra("extra_data", mStaggeredHomeAdapter.getResult());
+                intent.putStringArrayListExtra("result", mStaggeredHomeAdapter.getResult());
+                intent.putExtra("sum",mStaggeredHomeAdapter.getSum());
                 startActivity(intent);
                 break;
             case R.id.id_action_reload:

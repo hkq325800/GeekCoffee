@@ -8,6 +8,7 @@ import java.util.List;
  */
 public class Consumption {//订单类一个订单对应一个实体商品
     private List<Integer> mSum;//将每一组的个数记录下来
+    //private List<Integer> mPrice;
     private int[][] mDetail;//用来存储每项商品的预定详情
     private int mAmount=0;//pos是标明商品种类 mAmount是当前已定的商品总数
     private List<Integer> hotNum;
@@ -20,7 +21,7 @@ public class Consumption {//订单类一个订单对应一个实体商品
         coldNum = new ArrayList<Integer>();
     }
 
-    public void setmSum(){
+    public void initmSum(){
         mSum.add(0);
     }
 

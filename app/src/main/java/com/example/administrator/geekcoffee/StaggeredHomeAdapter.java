@@ -32,7 +32,7 @@ class StaggeredHomeAdapter extends
     private Consumption mCon;
     private List<String> mDatas;//每一组商品的名称
 
-	public interface OnItemClickLitener
+    public interface OnItemClickLitener
 	{
 		void onItemClick(View view, int pos);
 
@@ -63,7 +63,7 @@ class StaggeredHomeAdapter extends
             mHeights.add((int) (350 + Math.random() * 300));
             mCon.initcoldNum();
             mCon.inithotNum();
-            mCon.setmSum();
+            mCon.initmSum();
             for(int j = 0; j < 10; j++){
                 mCon.setmDetailChild(i,j,0);
             }
@@ -226,11 +226,23 @@ class StaggeredHomeAdapter extends
 		return mDatas.size();
 	}
 
+    public int getSum() {
+        int sum = 0;
+        for(int i=0; i<getItemCount();i++){
+            sum += mCon.getmSum(i) * mResult.get(i).getInt("price");
+        }
+        return sum;
+    }
+
+    public int getAmount(){
+        return mCon.getmAmount();
+    }
+
 	public void addData(int pos)//弹出一窗口供填写表单
 	{
 		mDatas.add(pos, "One");
 		mHeights.add((int) (350 + Math.random() * 300));//3:100+Math.random()*300
-        mCon.setmSum();
+        mCon.initmSum();
         mCon.inithotNum();
         mCon.initcoldNum();
         int[][] temp = new int[getItemCount()][10];
@@ -275,14 +287,15 @@ class StaggeredHomeAdapter extends
         ArrayList<String> result = new ArrayList();
         for (int i = 0; i < getItemCount(); i++){
             if (mCon.getmSum(i) != 0){//区分是否有预定
+                 int sum = mResult.get(i).getInt("price") * mCon.getmSum(i);
                  if (mResult.get(i).getBoolean("type")){//drink
                      String hot;
                      String cold;
-                     hot = mCon.gethotNum(i) != 0 ? "热：" + mCon.gethotNum(i) : "";
-                     cold = mCon.getcoldNum(i) != 0 ? "冷：" + mCon.getcoldNum(i) : "";
-                     result.add(mDatas.get(i) + hot + cold);
+                     hot = mCon.gethotNum(i) != 0 ? " 热 *" + mCon.gethotNum(i) : "";
+                     cold = mCon.getcoldNum(i) != 0 ? " 冷 *" + mCon.getcoldNum(i) : "";
+                     result.add(mDatas.get(i) + hot + cold + " = " + sum );
                  } else {
-                     result.add(mDatas.get(i) + "总数：" + mCon.getmSum(i));
+                     result.add(mDatas.get(i) + " * " + mCon.getmSum(i) + " = " + sum );
                  }
             }
         }
