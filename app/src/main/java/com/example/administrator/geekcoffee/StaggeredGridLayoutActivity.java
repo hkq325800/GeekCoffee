@@ -76,27 +76,36 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity
 		mStaggeredHomeAdapter.setOnItemClickLitener(new OnItemClickLitener()
 		{
 			@Override
-			public void onItemClick(View view, int position)
+			public void onItemClick(View view, int pos)
 			{
 				Toast.makeText(StaggeredGridLayoutActivity.this,
-						position + " click", Toast.LENGTH_SHORT).show();
+						pos + " click", Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
-			public void onItemLongClick(View view, int position)
+			public void onItemLongClick(View view, int pos)
 			{
 				Toast.makeText(StaggeredGridLayoutActivity.this,
-						position + " long click", Toast.LENGTH_SHORT).show();
+						pos + " long click", Toast.LENGTH_SHORT).show();
 			}
 
             @Override
-            public void onNumAddClick(View view, int position) {
-
+            public void onNumAddClick(View view, int pos, Consumption mCon) {
+                //由于AlertDialog较难分离
+                mCon.addmSum(pos);
+                mCon.addmAmount();
             }
 
             @Override
-            public void onNumCutClick(View view, int position) {
-
+            public void onNumCutClick(View view, int pos, Consumption mCon) {
+                if(mCon.getmDetail()[pos][mCon.getmSum(pos)-1]==1){
+                        mCon.cutcoldNum(pos);
+                }else if(mCon.getmDetail()[pos][mCon.getmSum(pos)-1]==2){
+                    mCon.cuthotNum(pos);
+                }
+                mCon.getmDetail()[pos][mCon.getmSum(pos)-1]=0;
+                mCon.cutmAmount();
+                mCon.cutmSum(pos);//减少定的个数
             }
         });
 	}
@@ -122,7 +131,6 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity
                     // 设置item动画
                     mRecyclerView.setItemAnimator(new DefaultItemAnimator());
                     initEvent();
-
                 } else {
                     Log.d("失败", "查询错误: " + e.getMessage());
                 }
