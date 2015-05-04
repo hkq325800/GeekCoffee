@@ -50,14 +50,6 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity  implements N
             Toast.makeText(this,str,Toast.LENGTH_SHORT).show();
         }*/
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.id_recyclerview);
-        setupAVOSCloud(false);
-        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads().detectDiskWrites().detectNetwork().penaltyLog().build());
-        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects().detectLeakedClosableObjects().penaltyLog().penaltyDeath().build());
-        //LeanSave();生成第一批数据
-
-        initData();//init mDatas
-
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
@@ -65,6 +57,14 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity  implements N
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.id_recyclerview);
+        setupAVOSCloud(false);
+        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads().detectDiskWrites().detectNetwork().penaltyLog().build());
+        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects().detectLeakedClosableObjects().penaltyLog().penaltyDeath().build());
+        //LeanSave();生成第一批数据
+
+        initData();//init mDatas
 	}
 
     private void LeanSave() {

@@ -16,7 +16,7 @@ public class Consumption {//订单类一个订单对应一个实体商品
     //也为Consumption类中数组的pos
     public Consumption(int count){
         mSum = new ArrayList<Integer>();
-        mDetail = new int[count][10];
+        mDetail = new int[count][Config.MaxSize];
         hotNum = new ArrayList<Integer>();
         coldNum = new ArrayList<Integer>();
     }

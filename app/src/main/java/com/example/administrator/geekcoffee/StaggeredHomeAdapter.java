@@ -64,7 +64,7 @@ class StaggeredHomeAdapter extends
             mCon.initcoldNum();
             mCon.inithotNum();
             mCon.initmSum();
-            for(int j = 0; j < 10; j++){
+            for(int j = 0; j < Config.MaxSize; j++){
                 mCon.setmDetailChild(i,j,0);
             }
 		}
@@ -245,7 +245,7 @@ class StaggeredHomeAdapter extends
         mCon.initmSum();
         mCon.inithotNum();
         mCon.initcoldNum();
-        int[][] temp = new int[getItemCount()][10];
+        int[][] temp = new int[getItemCount()][Config.MaxSize];//detail
         System.arraycopy(mCon.getmDetail(), 0, temp, 0, mCon.getmDetail().length);//数组扩充
         mCon.setmDetail(temp);
 
@@ -272,7 +272,7 @@ class StaggeredHomeAdapter extends
         mCon.removemSum(pos);
         mCon.removecoldNum(pos);
         mCon.removehotNum(pos);
-        int temp[][]=new int[getItemCount()][10];
+        int temp[][]=new int[getItemCount()][Config.MaxSize];//detail
         for (int i = 0; i < getItemCount() ; i++){
             temp[i] = i < pos ? mCon.getmDetail()[i] : mCon.getmDetail()[i+1];
         }
