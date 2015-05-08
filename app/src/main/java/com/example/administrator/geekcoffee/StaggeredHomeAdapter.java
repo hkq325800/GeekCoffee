@@ -31,6 +31,7 @@ class StaggeredHomeAdapter extends
     private List<AVObject> mResult;//一次查询后的缓存
     private Consumption mCon;
     private List<String> mDatas;//每一组商品的名称
+    private List<Integer> mReal;
 
     public interface OnItemClickLitener
 	{
@@ -50,12 +51,13 @@ class StaggeredHomeAdapter extends
 		this.mOnItemClickLitener = mOnItemClickLitener;
 	}
 
-	public StaggeredHomeAdapter(Context context, List<String> datas, List<AVObject> result)
+	public StaggeredHomeAdapter(Context context, List<String> datas, List<AVObject> result, List<Integer> realpos)
 	{
         now = context;
         mInflater = LayoutInflater.from(context);
         mHeights = new ArrayList<Integer>();
         mResult = result;
+        mReal = realpos;
         mDatas = datas;
         mCon = new Consumption(getItemCount());
 		for (int i = 0; i < getItemCount(); i++)
@@ -85,7 +87,7 @@ class StaggeredHomeAdapter extends
 		lp.height = mHeights.get(pos);
 		holder.tv_item.setLayoutParams(lp);
 
-		holder.tv_item.setText(mDatas.get(pos));
+		holder.tv_item.setText(mDatas.get(pos)+"\n\n"+mResult.get(mReal.get(pos)).getInt("price"));
         if (mCon.getmSum(pos) == 0){//若未预定恢复初始态
             setType1(holder);
         } else {//有预定填充数据
@@ -138,11 +140,11 @@ class StaggeredHomeAdapter extends
                 {
                     AlertDialog.Builder dialog = new AlertDialog.Builder(now);
                     final int pos = holder.getLayoutPosition();
-                    Boolean type = mResult.get(pos).getBoolean("type");//isDrink
+                    int type = mResult.get(mReal.get(pos)).getInt("type");//isDrink
                     if (mCon.getmSum(pos) == 0) {//设定为预定态
                         setType2(holder);
                     }
-                    if (type) {//若为饮料弹出选择
+                    if (type==1) {//若为饮料弹出选择
                         dialogBuild(holder,pos,dialog);
                     } else {//若为蛋糕
                         holder.tv_sum.setText("共 " + (mCon.getmSum(pos) + 1) + " 个");
@@ -229,7 +231,7 @@ class StaggeredHomeAdapter extends
     public int getSum() {
         int sum = 0;
         for(int i=0; i<getItemCount();i++){
-            sum += mCon.getmSum(i) * mResult.get(i).getInt("price");
+            sum += mCon.getmSum(i) * mResult.get(mReal.get(i)).getInt("price");
         }
         return sum;
     }
@@ -277,7 +279,7 @@ class StaggeredHomeAdapter extends
             temp[i] = i < pos ? mCon.getmDetail()[i] : mCon.getmDetail()[i+1];
         }
         mCon.setmDetail(temp);
-        AVObject del = mResult.get(pos);
+        AVObject del = mResult.get(mReal.get(pos));
         del.deleteInBackground();
         mResult.remove(pos);
 		notifyItemRemoved(pos);
@@ -287,8 +289,8 @@ class StaggeredHomeAdapter extends
         ArrayList<String> result = new ArrayList();
         for (int i = 0; i < getItemCount(); i++){
             if (mCon.getmSum(i) != 0){//区分是否有预定
-                 int sum = mResult.get(i).getInt("price") * mCon.getmSum(i);
-                 if (mResult.get(i).getBoolean("type")){//drink
+                 int sum = mResult.get(mReal.get(i)).getInt("price") * mCon.getmSum(i);
+                 if (mResult.get(mReal.get(i)).getInt("type")==1){//drink
                      String hot;
                      String cold;
                      hot = mCon.gethotNum(i) != 0 ? " 热 *" + mCon.gethotNum(i) : "";

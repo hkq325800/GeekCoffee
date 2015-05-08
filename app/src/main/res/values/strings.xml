@@ -2,8 +2,8 @@
     <!---->
     <string name="app_name">GeekCoffee</string>
 
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
+    <string name="title_section1">饮料类</string>
+    <string name="title_section2">糕点类</string>
     <string name="title_section3">Section 3</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -12,4 +12,9 @@
     <string name="action_example">Example action</string>
 
     <string name="action_settings">Settings</string>
+    <!--sweet-->
+    <string name="dialog_default_title">Here\'s a message!</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="LOADING">Loading...</string>
 </resources>
