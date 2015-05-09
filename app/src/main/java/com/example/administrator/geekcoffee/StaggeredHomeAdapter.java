@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
+import com.example.administrator.geekcoffee.sweet.SweetAlertDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,7 @@ class StaggeredHomeAdapter extends
     private Context now;//this
     private LayoutInflater mInflater;//layout
     private List<Integer> mHeights;
+    private List<Integer> mColor;
     private List<AVObject> mResult;//一次查询后的缓存
     private Consumption mCon;
     private List<String> mDatas;//每一组商品的名称
@@ -35,13 +37,13 @@ class StaggeredHomeAdapter extends
 
     public interface OnItemClickLitener
 	{
-		void onItemClick(View view, int pos);
+		void onItemClick(View view, int pos, Consumption mCon);
 
 		void onItemLongClick(View view, int pos);
 
-        void onNumAddClick(View view, int pos, Consumption mCon);
+        /*void onNumAddClick(View view, int pos, Consumption mCon);
 
-        void onNumCutClick(View view, int pos, Consumption mCon);
+        void onNumCutClick(View view, int pos, Consumption mCon);*/
 	}
 
 	private OnItemClickLitener mOnItemClickLitener;
@@ -56,13 +58,21 @@ class StaggeredHomeAdapter extends
         now = context;
         mInflater = LayoutInflater.from(context);
         mHeights = new ArrayList<Integer>();
+        mColor = new ArrayList<Integer>();
         mResult = result;
         mReal = realpos;
         mDatas = datas;
         mCon = new Consumption(getItemCount());
+        int[] color = {
+                R.color.color_item_normal,
+                R.color.blue_btn_bg_color,
+                R.color.success_stroke_color,
+                R.color.warning_stroke_color
+        };
 		for (int i = 0; i < getItemCount(); i++)
 		{
             mHeights.add((int) (350 + Math.random() * 300));
+            mColor.add(color[(int) (Math.random() *4)]);
             mCon.initcoldNum();
             mCon.inithotNum();
             mCon.initmSum();
@@ -84,6 +94,7 @@ class StaggeredHomeAdapter extends
 	public void onBindViewHolder(final MyViewHolder holder, final int pos)//每次重现调用
 	{
 		LayoutParams lp = holder.custom_cross.getLayoutParams();
+        holder.custom_cross.setBackgroundResource(mColor.get(pos));
 		lp.height = mHeights.get(pos);
 		holder.tv_item.setLayoutParams(lp);
 
@@ -104,7 +115,33 @@ class StaggeredHomeAdapter extends
 				public void onClick(View v)
 				{
 					int pos = holder.getLayoutPosition();
-					mOnItemClickLitener.onItemClick(holder.itemView, pos);//view,position
+                    int type = mResult.get(mReal.get(pos)).getInt("type");//isDrink
+                    if (mCon.getmSum(pos) == 0) {//设定为预定态
+                        setType2(holder);
+                    }
+                    if (type==1) {//若为饮料弹出选择
+                        //dialogBuild(holder,pos,dialog);
+                        final SweetAlertDialog pDialog = new SweetAlertDialog(now,SweetAlertDialog.SEEKBAR_TYPE)
+                                .setTitleText("");
+                        pDialog.setCancelable(true);
+                        pDialog.setCanceledOnTouchOutside(true);
+                        pDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                            @Override
+                            public void onCancel(DialogInterface dialog) {
+                                pDialog.dismiss();
+                            }
+                        });
+                        pDialog.show();
+                        pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                pDialog.dismiss();
+                            }
+                        });
+                    } else {//若为蛋糕
+                        holder.tv_sum.setText("共 " + (mCon.getmSum(pos) + 1) + " 个");
+                    }
+					mOnItemClickLitener.onItemClick(holder.itemView, pos, mCon);//view,position
 				}
 			});
 
@@ -120,7 +157,7 @@ class StaggeredHomeAdapter extends
 				}
 			});
 
-            holder.btn_cut.setOnClickListener(new OnClickListener(){
+            /*holder.btn_cut.setOnClickListener(new OnClickListener(){
                 @Override
                 public void onClick(View v)
                 {
@@ -132,9 +169,9 @@ class StaggeredHomeAdapter extends
                         fill(pos,holder);
                     }
                 }
-            });
+            });*/
 
-            holder.btn_add.setOnClickListener(new OnClickListener(){
+            /*holder.btn_add.setOnClickListener(new OnClickListener(){
                 @Override
                 public void onClick(View v)
                 {
@@ -145,13 +182,29 @@ class StaggeredHomeAdapter extends
                         setType2(holder);
                     }
                     if (type==1) {//若为饮料弹出选择
-                        dialogBuild(holder,pos,dialog);
+                        //dialogBuild(holder,pos,dialog);
+                        final SweetAlertDialog pDialog = new SweetAlertDialog(now,SweetAlertDialog.SEEKBAR_TYPE)
+                                .setTitleText("");
+                        pDialog.show();
+                        pDialog.setCancelable(true);
+                        pDialog.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                pDialog.dismiss();
+                            }
+                        });
+                        pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                pDialog.dismiss();
+                            }
+                        });
                     } else {//若为蛋糕
                         holder.tv_sum.setText("共 " + (mCon.getmSum(pos) + 1) + " 个");
                     }
                     mOnItemClickLitener.onNumAddClick(holder.itemView, pos, mCon);
                 }
-            });
+            });*/
 		}
 	}
 

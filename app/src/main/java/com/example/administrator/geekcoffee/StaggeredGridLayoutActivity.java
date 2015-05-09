@@ -14,6 +14,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +35,7 @@ import java.util.List;
 
 public class StaggeredGridLayoutActivity extends ActionBarActivity  implements NavigationDrawerFragment.NavigationDrawerCallbacks
 {
+    private int backCount = 0;
     private int position = 0;
     private int i = -1;
     private NavigationDrawerFragment mNavigationDrawerFragment;
@@ -199,9 +201,9 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity  implements N
 	{
 		mStaggeredHomeAdapter.setOnItemClickLitener(new OnItemClickLitener() {
             @Override
-            public void onItemClick(View view, int pos) {
-                Toast.makeText(StaggeredGridLayoutActivity.this,
-                        pos + " click", Toast.LENGTH_SHORT).show();
+            public void onItemClick(View view, int pos, Consumption mCon) {
+                mCon.addmSum(pos);
+                mCon.addmAmount();
             }
 
             @Override
@@ -210,14 +212,14 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity  implements N
                         pos + " long click", Toast.LENGTH_SHORT).show();
             }
 
-            @Override
+            /*@Override
             public void onNumAddClick(View view, int pos, Consumption mCon) {
                 //由于AlertDialog较难分离
                 mCon.addmSum(pos);
                 mCon.addmAmount();
-            }
+            }*/
 
-            @Override
+            /*@Override
             public void onNumCutClick(View view, int pos, Consumption mCon) {
                 if (mCon.getmDetail()[pos][mCon.getmSum(pos) - 1] == 1) {
                     mCon.cutcoldNum(pos);
@@ -227,7 +229,7 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity  implements N
                 mCon.getmDetail()[pos][mCon.getmSum(pos) - 1] = 0;
                 mCon.cutmAmount();
                 mCon.cutmSum(pos);//减少定的个数
-            }
+            }*/
         });
 	}
 
@@ -321,6 +323,39 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity  implements N
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_BACK:
+            {
+                backCount++;
+                if(backCount == 2)
+                {
+                    finish();
+                }
+                else
+                {
+                    Toast.makeText(this, "再点击一次退出应用程序", Toast.LENGTH_SHORT).show();
+                    new CountDownTimer(800 * 4, 500) {
+                        public void onTick(long millisUntilFinished) {
+                            // you can change the progress bar color by ProgressHelper every 800 millis、
+                        }
+
+                        public void onFinish() {
+                            backCount = 0;
+                        }
+                    }.start();
+                }
+                return false;
+            }
+
+            default:
+                break;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     public static class PlaceholderFragment extends Fragment {
