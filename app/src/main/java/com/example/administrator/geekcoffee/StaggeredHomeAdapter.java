@@ -40,10 +40,6 @@ class StaggeredHomeAdapter extends
 		void onItemClick(View view, int pos, Consumption mCon);
 
 		void onItemLongClick(View view, int pos);
-
-        /*void onNumAddClick(View view, int pos, Consumption mCon);
-
-        void onNumCutClick(View view, int pos, Consumption mCon);*/
 	}
 
 	private OnItemClickLitener mOnItemClickLitener;
@@ -76,9 +72,9 @@ class StaggeredHomeAdapter extends
             mCon.initcoldNum();
             mCon.inithotNum();
             mCon.initmSum();
-            for(int j = 0; j < Config.MaxSize; j++){
+            /*for(int j = 0; j < Config.MaxSize; j++){
                 mCon.setmDetailChild(i,j,0);
-            }
+            }*/
 		}
 	}
 
@@ -103,7 +99,7 @@ class StaggeredHomeAdapter extends
             setType1(holder);
         } else {//有预定填充数据
             setType2(holder);
-            fill(pos,holder);
+            //fill(pos,holder);
         }
 
 		// 如果设置了回调，则设置点击事件
@@ -114,14 +110,14 @@ class StaggeredHomeAdapter extends
 				@Override
 				public void onClick(View v)
 				{
-					int pos = holder.getLayoutPosition();
+					final int pos = holder.getLayoutPosition();
                     int type = mResult.get(mReal.get(pos)).getInt("type");//isDrink
                     if (mCon.getmSum(pos) == 0) {//设定为预定态
                         setType2(holder);
                     }
                     if (type==1) {//若为饮料弹出选择
                         //dialogBuild(holder,pos,dialog);
-                        final SweetAlertDialog pDialog = new SweetAlertDialog(now,SweetAlertDialog.SEEKBAR_TYPE)
+                        final SweetAlertDialog pDialog = new SweetAlertDialog(now,SweetAlertDialog.SEEKBAR_TWO)
                                 .setTitleText("");
                         pDialog.setCancelable(true);
                         pDialog.setCanceledOnTouchOutside(true);
@@ -132,20 +128,55 @@ class StaggeredHomeAdapter extends
                             }
                         });
                         pDialog.show();
+                        pDialog.setCold(mCon.getcoldNum(pos));
+                        pDialog.setHot(mCon.gethotNum(pos));
                         pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(SweetAlertDialog sweetAlertDialog) {
                                 pDialog.dismiss();
+                                mCon.setColdNum(pos, pDialog.getCold());
+                                mCon.setHotNum(pos, pDialog.getHot());
+                                mCon.setmSum(pos,pDialog.getCold() + pDialog.getHot());
+                                if(mCon.getmSum(pos)!=0) {
+                                    holder.tv_sum.setText("数量:" + mCon.getmSum(pos));
+                                }else{
+                                    setType1(holder);
+                                }
                             }
                         });
                     } else {//若为蛋糕
-                        holder.tv_sum.setText("共 " + (mCon.getmSum(pos) + 1) + " 个");
+                        /*holder.tv_sum.setText("共 " + (mCon.getmSum(pos) + 1) + " 个");*/
+                        final SweetAlertDialog pDialog = new SweetAlertDialog(now,SweetAlertDialog.SEEKBAR_ONE)
+                                .setTitleText("");
+                        pDialog.setCancelable(true);
+                        pDialog.setCanceledOnTouchOutside(true);
+                        pDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                            @Override
+                            public void onCancel(DialogInterface dialog) {
+                                pDialog.dismiss();
+                            }
+                        });
+                        pDialog.show();
+                        pDialog.setCold(mCon.getcoldNum(pos));
+                        pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                pDialog.dismiss();
+                                mCon.setColdNum(pos, pDialog.getCold());
+                                mCon.setmSum(pos, pDialog.getCold());
+                                if(mCon.getmSum(pos)!=0) {
+                                    holder.tv_sum.setText("数量:" + mCon.getmSum(pos));
+                                }else{
+                                    setType1(holder);
+                                }
+                            }
+                        });
                     }
 					mOnItemClickLitener.onItemClick(holder.itemView, pos, mCon);//view,position
 				}
 			});
 
-			holder.itemView.setOnLongClickListener(new OnLongClickListener()
+			/*holder.itemView.setOnLongClickListener(new OnLongClickListener()
 			{
 				@Override
 				public boolean onLongClick(View v)
@@ -155,60 +186,11 @@ class StaggeredHomeAdapter extends
 					removeData(pos);
 					return false;
 				}
-			});
-
-            /*holder.btn_cut.setOnClickListener(new OnClickListener(){
-                @Override
-                public void onClick(View v)
-                {
-                    int pos = holder.getLayoutPosition();
-                    mOnItemClickLitener.onNumCutClick(holder.itemView, pos, mCon);//数据处理
-                    if (mCon.getmSum(pos) == 0) {//恢复初始态
-                        setType1(holder);
-                    } else {//恢复上一次选择的选项
-                        fill(pos,holder);
-                    }
-                }
-            });*/
-
-            /*holder.btn_add.setOnClickListener(new OnClickListener(){
-                @Override
-                public void onClick(View v)
-                {
-                    AlertDialog.Builder dialog = new AlertDialog.Builder(now);
-                    final int pos = holder.getLayoutPosition();
-                    int type = mResult.get(mReal.get(pos)).getInt("type");//isDrink
-                    if (mCon.getmSum(pos) == 0) {//设定为预定态
-                        setType2(holder);
-                    }
-                    if (type==1) {//若为饮料弹出选择
-                        //dialogBuild(holder,pos,dialog);
-                        final SweetAlertDialog pDialog = new SweetAlertDialog(now,SweetAlertDialog.SEEKBAR_TYPE)
-                                .setTitleText("");
-                        pDialog.show();
-                        pDialog.setCancelable(true);
-                        pDialog.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                pDialog.dismiss();
-                            }
-                        });
-                        pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                pDialog.dismiss();
-                            }
-                        });
-                    } else {//若为蛋糕
-                        holder.tv_sum.setText("共 " + (mCon.getmSum(pos) + 1) + " 个");
-                    }
-                    mOnItemClickLitener.onNumAddClick(holder.itemView, pos, mCon);
-                }
-            });*/
+			});*/
 		}
 	}
 
-    private void dialogBuild(final MyViewHolder holder, final int pos, AlertDialog.Builder dialog) {
+    /*private void dialogBuild(final MyViewHolder holder, final int pos, AlertDialog.Builder dialog) {
         dialog.setTitle("选择冷热");
         dialog.setCancelable(true);
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -243,9 +225,9 @@ class StaggeredHomeAdapter extends
             }
         });
         dialog.show();
-    }
+    }*/
 
-    private void fill(int pos, MyViewHolder holder) {
+    /*private void fill(int pos, MyViewHolder holder) {
         switch (mCon.getmDetailChild(pos,mCon.getmSum(pos) - 1)){//恢复上一次选择的选项
             case 1:
                 holder.tv_temp.setText("冷");
@@ -259,10 +241,14 @@ class StaggeredHomeAdapter extends
                 break;
         }
         holder.tv_sum.setText("共 " + mCon.getmSum(pos) + " 个");
+    }*/
+
+    public void setmAmount(){
+        mCon.setmAmount();
     }
 
     private void setType1(MyViewHolder holder){
-        holder.btn_cut.setVisibility(View.INVISIBLE);
+        //holder.btn_cut.setVisibility(View.INVISIBLE);
         holder.tv_sum.setVisibility(View.INVISIBLE);
         holder.tv_temp.setVisibility(View.INVISIBLE);
         holder.tv_temp.setText("");
@@ -270,7 +256,7 @@ class StaggeredHomeAdapter extends
     }
 
     private void setType2(MyViewHolder holder){
-        holder.btn_cut.setVisibility(View.VISIBLE);
+        //holder.btn_cut.setVisibility(View.VISIBLE);
         holder.tv_sum.setVisibility(View.VISIBLE);
         holder.tv_temp.setVisibility(View.VISIBLE);
     }
@@ -300,9 +286,9 @@ class StaggeredHomeAdapter extends
         mCon.initmSum();
         mCon.inithotNum();
         mCon.initcoldNum();
-        int[][] temp = new int[getItemCount()][Config.MaxSize];//detail
+        /*int[][] temp = new int[getItemCount()][Config.MaxSize];//detail
         System.arraycopy(mCon.getmDetail(), 0, temp, 0, mCon.getmDetail().length);//数组扩充
-        mCon.setmDetail(temp);
+        mCon.setmDetail(temp);*/
 
         AVObject Menu = new AVObject("Menu");
         int price = (int) (Math.random() * 10 + 5);
@@ -327,11 +313,11 @@ class StaggeredHomeAdapter extends
         mCon.removemSum(pos);
         mCon.removecoldNum(pos);
         mCon.removehotNum(pos);
-        int temp[][]=new int[getItemCount()][Config.MaxSize];//detail
+        /*int temp[][]=new int[getItemCount()][Config.MaxSize];//detail
         for (int i = 0; i < getItemCount() ; i++){
             temp[i] = i < pos ? mCon.getmDetail()[i] : mCon.getmDetail()[i+1];
         }
-        mCon.setmDetail(temp);
+        mCon.setmDetail(temp);*/
         AVObject del = mResult.get(mReal.get(pos));
         del.deleteInBackground();
         mResult.remove(pos);
@@ -365,8 +351,8 @@ class StaggeredHomeAdapter extends
 		TextView tv_item;
         TextView tv_sum;
         TextView tv_temp;
-        Button btn_cut;
-        Button btn_add;
+        /*Button btn_cut;
+        Button btn_add;*/
 
 		public MyViewHolder(View view)
 		{
@@ -375,9 +361,6 @@ class StaggeredHomeAdapter extends
             tv_item = (TextView) view.findViewById(R.id.tv_item);
             tv_sum = (TextView) view.findViewById(R.id.tv_sum);
             tv_temp = (TextView) view.findViewById(R.id.tv_temp);
-            btn_cut = (Button) view.findViewById(R.id.btn_cut);
-            btn_add = (Button) view.findViewById(R.id.btn_add);
-            
 		}
 	}
 

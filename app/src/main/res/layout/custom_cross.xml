@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <Button
+    <!--<Button
         android:id="@+id/btn_cut"
         android:layout_alignParentLeft="true"
         android:layout_width="50dp"
@@ -18,7 +18,7 @@
         android:background="#00000000"
         android:textSize="25sp"
         android:ems="1"
-        android:text="+"/>
+        android:text="+"/>-->
 
     <TextView
         android:id="@+id/tv_temp"

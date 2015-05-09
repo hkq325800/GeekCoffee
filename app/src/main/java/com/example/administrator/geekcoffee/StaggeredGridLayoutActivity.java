@@ -202,8 +202,8 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity  implements N
 		mStaggeredHomeAdapter.setOnItemClickLitener(new OnItemClickLitener() {
             @Override
             public void onItemClick(View view, int pos, Consumption mCon) {
-                mCon.addmSum(pos);
-                mCon.addmAmount();
+                /*mCon.addmSum(pos);
+                mCon.addmAmount();*/
             }
 
             @Override
@@ -301,7 +301,9 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity  implements N
                 return true;
             case R.id.id_action_delete:
                 //mStaggeredHomeAdapter.removeData(1);
-                if(mAdapter[position].getAmount()==0){
+                mAdapter[0].setmAmount();
+                mAdapter[1].setmAmount();
+                if(mAdapter[0].getAmount() + mAdapter[1].getAmount()==0){
                     return true;
                 }
                 Intent intent = new Intent(this , ResultActivity.class);
@@ -313,12 +315,14 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity  implements N
                 startActivity(intent);
                 return true;
             case R.id.id_action_reload:
-                /*int j=mDatas.size();
-                for(int i=0;i<j;i++){
-                    mStaggeredHomeAdapter.removeData(0);
+                for(int i = 0; i < mDatas4Drink.size(); i++){
+                    mAdapter[0].removeData(0);
+                }
+                for(int i = 0; i < mDatas4Cake.size(); i++){
+                    mAdapter[1].removeData(0);
                 }
                 LeanSave();
-                //init(MenuDrink);*/
+                //init(MenuDrink);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

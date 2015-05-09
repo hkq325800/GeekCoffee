@@ -3,6 +3,7 @@ package com.example.administrator.geekcoffee.sweet;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -64,7 +65,6 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
     private SeekBar sb1;
     private SeekBar sb2;
     private RelativeLayout mSeekBar;
-    private Boolean is = false;
     private boolean mCloseFromCancel;
 
     public static final int NORMAL_TYPE = 0;
@@ -73,7 +73,8 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
     public static final int WARNING_TYPE = 3;
     public static final int CUSTOM_IMAGE_TYPE = 4;
     public static final int PROGRESS_TYPE = 5;
-    public static final int SEEKBAR_TYPE = 6;
+    public static final int SEEKBAR_TWO = 6;
+    public static final int SEEKBAR_ONE = 7;
 
     public static interface OnSweetClickListener {
         public void onClick (SweetAlertDialog sweetAlertDialog);
@@ -85,7 +86,6 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
 
     public SweetAlertDialog(Context context, int alertType) {//1
         super(context, R.style.alert_dialog);
-        if(alertType==SEEKBAR_TYPE){ is=true; }
         setCancelable(true);
         setCanceledOnTouchOutside(false);
         mProgressHelper = new ProgressHelper(context);
@@ -177,7 +177,7 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
         mConfirmButton.setOnClickListener(this);
         mCancelButton.setOnClickListener(this);
 
-        setCustom(is);
+        setCustom(getAlerType());
         setTitleText(mTitleText);
         setContentText(mContentText);
         setCancelText(mCancelText);
@@ -402,11 +402,14 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
         return mProgressHelper;
     }
 
-    public SweetAlertDialog setCustom(boolean is){
-        if(is) {
+    public SweetAlertDialog setCustom(int alertType){
+        if(alertType==SEEKBAR_TWO) {
             mSeekBar.setVisibility(View.VISIBLE);
-            iv1.setImageResource(R.drawable.hot2);
-            iv2.setImageResource(R.drawable.cold2);
+            iv2.setVisibility(View.VISIBLE);
+            sb2.setVisibility(View.VISIBLE);
+            text2.setVisibility(View.VISIBLE);
+            iv1.setImageResource(R.drawable.cold2);
+            iv2.setImageResource(R.drawable.hot2);
             sb1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -451,7 +454,49 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
                     sb2.setProgress(sb2.getProgress() + 1);
                 }
             });
+        }else if(alertType==SEEKBAR_ONE){
+            mSeekBar.setVisibility(View.VISIBLE);
+            iv1.setImageResource(R.drawable.cold1);
+            text1.setTextColor(Color.BLACK);
+            sb1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    text1.setText(progress + "");
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
+            iv1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    sb1.setProgress(sb1.getProgress() + 1);
+                }
+            });
         }
         return this;
+    }
+
+    public int getCold(){
+        return sb1.getProgress();
+    }
+
+    public int getHot(){
+        return sb2.getProgress();
+    }
+
+    public void setCold(int value){
+        sb1.setProgress(value);
+    }
+
+    public void setHot(int value){
+        sb2.setProgress(value);
     }
 }

@@ -16,12 +16,7 @@ public class CrossButtonLayout extends RelativeLayout{
     public CrossButtonLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.custom_cross,this);
-        final Button btn_cut = (Button) findViewById(R.id.btn_cut);
-        final Button btn_add = (Button) findViewById(R.id.btn_add);
-        /*final Button cold = (Button) findViewById(R.id.cold);
-        final Button hot = (Button) findViewById(R.id.hot);*/
-        //TextView tv = (TextView) findViewById(R.id.cross_text);
-        btn_cut.setOnClickListener(new OnClickListener() {
+        /*btn_cut.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getContext(),btn_cut.getText().toString(),Toast.LENGTH_SHORT).show();
@@ -31,18 +26,6 @@ public class CrossButtonLayout extends RelativeLayout{
             @Override
             public void onClick(View v) {
                 Toast.makeText(getContext(),btn_add.getText().toString(),Toast.LENGTH_SHORT).show();
-            }
-        });
-        /*cold.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        hot.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
             }
         });*/
     }
