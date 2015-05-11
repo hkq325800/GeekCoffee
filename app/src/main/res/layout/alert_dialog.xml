@@ -165,7 +165,7 @@
         android:layout_alignBottom="@id/iv1"
         android:layout_marginLeft="5dp"
         android:textSize="15sp"
-        android:textColor="@color/error_stroke_color"
+        android:textColor="@color/blue_btn_bg_pressed_color"
         android:text="0"/>
 
     <ImageView
@@ -192,7 +192,7 @@
         android:layout_alignBottom="@id/sb2"
         android:layout_marginLeft="5dp"
         android:textSize="15sp"
-        android:textColor="@color/blue_btn_bg_pressed_color"
+        android:textColor="@color/error_stroke_color"
         android:text="0"
         android:visibility="gone"/>
     </RelativeLayout>

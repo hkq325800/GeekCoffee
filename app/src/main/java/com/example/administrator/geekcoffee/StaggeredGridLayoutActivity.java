@@ -280,9 +280,9 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity  implements N
     {
         switch (item.getItemId())
         {
-            case R.id.id_action_add:
-                /*mStaggeredHomeAdapter.addData(mDatas.size());*/
-                return true;
+            /*case R.id.id_action_add:
+                *//*mStaggeredHomeAdapter.addData(mDatas.size());*//*
+                return true;*/
             case R.id.id_action_delete:
                 //mStaggeredHomeAdapter.removeData(1);
                 mAdapter[0].setmAmount();

@@ -2,14 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/success_stroke_color"
+    android:background="@color/gray_btn_bg_pressed_color"
     android:gravity="center_horizontal">
     <TextView
         android:id="@+id/result_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:textSize="30sp"
+        android:textSize="27sp"
         android:layout_marginTop="50dp"
         android:text="菜单"/>
     <Button

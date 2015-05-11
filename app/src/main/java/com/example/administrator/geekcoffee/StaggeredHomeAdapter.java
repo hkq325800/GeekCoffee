@@ -63,12 +63,13 @@ class StaggeredHomeAdapter extends
                 R.color.color_item_normal,
                 R.color.blue_btn_bg_color,
                 R.color.success_stroke_color,
-                R.color.warning_stroke_color
+                R.color.warning_stroke_color,
+                R.color.back_result
         };
 		for (int i = 0; i < getItemCount(); i++)
 		{
             mHeights.add((int) (350 + Math.random() * 300));
-            mColor.add(color[(int) (Math.random() *4)]);
+            mColor.add(color[(int) (Math.random() *5)]);
             mCon.initcoldNum();
             mCon.inithotNum();
             mCon.initmSum();
@@ -99,7 +100,7 @@ class StaggeredHomeAdapter extends
             setType1(holder);
         } else {//有预定填充数据
             setType2(holder);
-            //fill(pos,holder);
+            fill(pos,holder);
         }
 
 		// 如果设置了回调，则设置点击事件
@@ -189,6 +190,10 @@ class StaggeredHomeAdapter extends
 			});*/
 		}
 	}
+
+    private void fill(int pos, MyViewHolder holder) {
+        holder.tv_sum.setText("数量:" + mCon.getmSum(pos));
+    }
 
     public void setmAmount(){
         mCon.setmAmount();

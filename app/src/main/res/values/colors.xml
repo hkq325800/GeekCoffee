@@ -3,6 +3,7 @@
     <color name="transparent">#00000000</color>
     <color name="color_item_press">#ffff0000</color>
     <color name="color_item_normal">#44ff0000</color>
+    <color name="back_result">#FDEB6D</color>
     <!--sweet-->
     <color name="float_transparent">#00000000</color>
     <color name="sweet_dialog_bg_color">#FFFFFF</color>
