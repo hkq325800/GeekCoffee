@@ -190,65 +190,11 @@ class StaggeredHomeAdapter extends
 		}
 	}
 
-    /*private void dialogBuild(final MyViewHolder holder, final int pos, AlertDialog.Builder dialog) {
-        dialog.setTitle("选择冷热");
-        dialog.setCancelable(true);
-        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                if (mCon.getmSum(pos) == 1) {
-                    setType1(holder);
-                }
-
-                mCon.cutmSum(pos);
-                mCon.cutmAmount();
-            }
-        });
-        dialog.setPositiveButton("热", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                holder.tv_temp.setText("热");
-                holder.tv_sum.setText("共 " + mCon.getmSum(pos) + " 个");
-
-                mCon.setmDetailChild(pos,mCon.getmSum(pos) - 1,2);
-                mCon.addhotNum(pos);
-            }
-        });
-        dialog.setNegativeButton("冷", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                holder.tv_temp.setText("冷");
-                holder.tv_sum.setText("共 " + mCon.getmSum(pos) + " 个");
-
-                mCon.setmDetailChild(pos, mCon.getmSum(pos) - 1, 1);
-                mCon.addcoldNum(pos);
-            }
-        });
-        dialog.show();
-    }*/
-
-    /*private void fill(int pos, MyViewHolder holder) {
-        switch (mCon.getmDetailChild(pos,mCon.getmSum(pos) - 1)){//恢复上一次选择的选项
-            case 1:
-                holder.tv_temp.setText("冷");
-                break;
-            case 2:
-                holder.tv_temp.setText("热");
-                break;
-            case 0:
-                break;
-            default:
-                break;
-        }
-        holder.tv_sum.setText("共 " + mCon.getmSum(pos) + " 个");
-    }*/
-
     public void setmAmount(){
         mCon.setmAmount();
     }
 
     private void setType1(MyViewHolder holder){
-        //holder.btn_cut.setVisibility(View.INVISIBLE);
         holder.tv_sum.setVisibility(View.INVISIBLE);
         holder.tv_temp.setVisibility(View.INVISIBLE);
         holder.tv_temp.setText("");
@@ -256,7 +202,6 @@ class StaggeredHomeAdapter extends
     }
 
     private void setType2(MyViewHolder holder){
-        //holder.btn_cut.setVisibility(View.VISIBLE);
         holder.tv_sum.setVisibility(View.VISIBLE);
         holder.tv_temp.setVisibility(View.VISIBLE);
     }
@@ -320,9 +265,29 @@ class StaggeredHomeAdapter extends
         mCon.setmDetail(temp);*/
         AVObject del = mResult.get(mReal.get(pos));
         del.deleteInBackground();
-        mResult.remove(pos);
+        mReal.remove(pos);
+        mColor.remove(pos);
 		notifyItemRemoved(pos);
 	}
+
+    public void removeAll(){
+        mDatas.removeAll(mDatas);
+        mHeights.removeAll(mHeights);
+        mCon.removeAllmSum();
+        mCon.removeAllcoldNum();
+        mCon.removeAllhotNum();
+        try {
+            AVObject.deleteAll(mResult);
+        } catch (AVException e) {
+            e.printStackTrace();
+        }
+        mReal.removeAll(mReal);
+        mColor.removeAll(mColor);
+    }
+
+    public void removeAllResult(){
+        mResult.removeAll(mResult);
+    }
 
     public ArrayList<String> getResult(){
         ArrayList<String> result = new ArrayList();
@@ -334,9 +299,9 @@ class StaggeredHomeAdapter extends
                      String cold;
                      hot = mCon.gethotNum(i) != 0 ? " 热 *" + mCon.gethotNum(i) : "";
                      cold = mCon.getcoldNum(i) != 0 ? " 冷 *" + mCon.getcoldNum(i) : "";
-                     result.add(mDatas.get(i) + hot + cold + " = " + sum );
+                     result.add(mDatas.get(i) + hot + cold  );//+ " = " + sum
                  } else {
-                     result.add(mDatas.get(i) + " * " + mCon.getmSum(i) + " = " + sum );
+                     result.add(mDatas.get(i) + " * " + mCon.getmSum(i)); //+ " = " + sum );
                  }
             }
         }

@@ -35,6 +35,8 @@ import java.util.List;
 
 public class StaggeredGridLayoutActivity extends ActionBarActivity  implements NavigationDrawerFragment.NavigationDrawerCallbacks
 {
+    private static final int MenuDrink = 0;
+    private static final int MenuCake = 1;
     private int backCount = 0;
     private int position = 0;
     private int i = -1;
@@ -48,8 +50,6 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity  implements N
     private List<Integer> mPosition4Cake;
 	private StaggeredHomeAdapter mStaggeredHomeAdapter;
     private StaggeredHomeAdapter[] mAdapter = new StaggeredHomeAdapter [3];
-    private static final int MenuDrink = 0;
-    private static final int MenuCake = 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -138,7 +138,7 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity  implements N
                     mResult = avObjects;
                     getAda(MenuCake);
                     getAda(MenuDrink);
-                    setAda(MenuDrink);
+                    onSectionAttached(position + 1);
                 } else {
                     Log.d("失败", "查询错误: " + e.getMessage());
                 }
@@ -211,25 +211,6 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity  implements N
                 Toast.makeText(StaggeredGridLayoutActivity.this,
                         pos + " long click", Toast.LENGTH_SHORT).show();
             }
-
-            /*@Override
-            public void onNumAddClick(View view, int pos, Consumption mCon) {
-                //由于AlertDialog较难分离
-                mCon.addmSum(pos);
-                mCon.addmAmount();
-            }*/
-
-            /*@Override
-            public void onNumCutClick(View view, int pos, Consumption mCon) {
-                if (mCon.getmDetail()[pos][mCon.getmSum(pos) - 1] == 1) {
-                    mCon.cutcoldNum(pos);
-                } else if (mCon.getmDetail()[pos][mCon.getmSum(pos) - 1] == 2) {
-                    mCon.cuthotNum(pos);
-                }
-                mCon.getmDetail()[pos][mCon.getmSum(pos) - 1] = 0;
-                mCon.cutmAmount();
-                mCon.cutmSum(pos);//减少定的个数
-            }*/
         });
 	}
 
@@ -245,6 +226,9 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity  implements N
     @Override
     public void onNavigationDrawerItemSelected(int position) {//newInstance
         // update the main content by replacing fragments
+        if(position==this.position){
+            return;
+        }
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
@@ -263,9 +247,9 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity  implements N
             case 1:
                 mTitle = getString(R.string.title_section1);//默认已调用
                 position = MenuDrink;
-                if(mAdapter[MenuDrink]!=null) {
+                //if(mAdapter[MenuDrink]!=null) {
                     setAda(MenuDrink);
-                }
+                //}
                 break;
             case 2:
                 mTitle = getString(R.string.title_section2);
@@ -315,14 +299,19 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity  implements N
                 startActivity(intent);
                 return true;
             case R.id.id_action_reload:
-                for(int i = 0; i < mDatas4Drink.size(); i++){
+                /*int size1 = mDatas4Drink.size();
+                int size2 = mDatas4Cake.size();
+                for(int i = 0; i < size1; i++){
                     mAdapter[0].removeData(0);
                 }
-                for(int i = 0; i < mDatas4Cake.size(); i++){
+                for(int i = 0; i < size2; i++){
                     mAdapter[1].removeData(0);
-                }
+                }*/
+                mAdapter[0].removeAll();
+                mAdapter[1].removeAll();
+                mAdapter[0].removeAllResult();
                 LeanSave();
-                //init(MenuDrink);
+                init();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

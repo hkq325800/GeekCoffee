@@ -27,6 +27,10 @@ public class Consumption {//订单类一个订单对应一个实体商品
         mSum.remove(pos);
     }
 
+    public void removeAllmSum(){
+        mSum.removeAll(mSum);
+    }
+
     public Integer getmSum(int pos) {
         return mSum.get(pos);
     }
@@ -91,6 +95,10 @@ public class Consumption {//订单类一个订单对应一个实体商品
         hotNum.remove(pos);
     }
 
+    public void removeAllhotNum(){
+        hotNum.removeAll(hotNum);
+    }
+
     public void setHotNum(int pos, int value){
         hotNum.set(pos,value);
     }
@@ -113,6 +121,10 @@ public class Consumption {//订单类一个订单对应一个实体商品
 
     public void removecoldNum(int pos){
         coldNum.remove(pos);
+    }
+
+    public void removeAllcoldNum(){
+        coldNum.removeAll(coldNum);
     }
 
     public void setColdNum(int pos, int value){

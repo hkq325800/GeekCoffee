@@ -403,6 +403,7 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
     }
 
     public SweetAlertDialog setCustom(int alertType){
+        mTitleTextView.setVisibility(View.GONE);
         if(alertType==SEEKBAR_TWO) {
             mSeekBar.setVisibility(View.VISIBLE);
             iv2.setVisibility(View.VISIBLE);
