@@ -64,7 +64,7 @@ class StaggeredHomeAdapter extends
                 R.color.blue_btn_bg_color,
                 R.color.success_stroke_color,
                 R.color.warning_stroke_color,
-                R.color.back_result
+                R.color.minionyellow
         };
 		for (int i = 0; i < getItemCount(); i++)
 		{
