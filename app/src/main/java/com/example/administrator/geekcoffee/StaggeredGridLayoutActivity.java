@@ -33,8 +33,7 @@ import com.example.administrator.geekcoffee.sweet.SweetAlertDialog;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StaggeredGridLayoutActivity extends ActionBarActivity  implements NavigationDrawerFragment.NavigationDrawerCallbacks
-{
+public class StaggeredGridLayoutActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
     private static final int MenuDrink = 0;
     private static final int MenuCake = 1;
     private int backCount = 0;
@@ -42,19 +41,18 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity  implements N
     private int i = -1;
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private CharSequence mTitle;
-	private RecyclerView mRecyclerView;
-	private List<String> mDatas4Drink;
+    private RecyclerView mRecyclerView;
+    private List<String> mDatas4Drink;
     private List<String> mDatas4Cake;
     private List<AVObject> mResult;
     private List<Integer> mPosition4Drink;
     private List<Integer> mPosition4Cake;
-	private StaggeredHomeAdapter mStaggeredHomeAdapter;
-    private StaggeredHomeAdapter[] mAdapter = new StaggeredHomeAdapter [3];
+    private StaggeredHomeAdapter mStaggeredHomeAdapter;
+    private StaggeredHomeAdapter[] mAdapter = new StaggeredHomeAdapter[3];
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState)
-	{
-		super.onCreate(savedInstanceState);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_recyclerview);
         setupAVOSCloud(false);
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads().detectDiskWrites().detectNetwork().penaltyLog().build());
@@ -72,7 +70,7 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity  implements N
         mRecyclerView = (RecyclerView) findViewById(R.id.id_recyclerview);
 
         //LeanSave();//生成第一批数据
-	}
+    }
 
     private void init() {//初始化数据
         mDatas4Drink = new ArrayList<String>();
@@ -87,7 +85,7 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity  implements N
             public void onTick(long millisUntilFinished) {
                 // you can change the progress bar color by ProgressHelper every 800 millis、
                 i++;
-                switch (i){
+                switch (i) {
                     case 0:
                         pDialog.getProgressHelper().setBarColor(getResources().getColor(R.color.blue_btn_bg_color));
                         break;
@@ -146,7 +144,7 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity  implements N
         });
     }
 
-    private void getAda(int menu){//获取需要的Ada
+    private void getAda(int menu) {//获取需要的Ada
         if (menu == MenuDrink) {
             for (int i = 0; i < mResult.size(); i++) {
                 if (mResult.get(i).getInt("type") != 2) {
@@ -162,7 +160,7 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity  implements N
                     mPosition4Cake.add(i);
                 }
             }
-            mStaggeredHomeAdapter = new StaggeredHomeAdapter(StaggeredGridLayoutActivity.this, mDatas4Cake, mResult,mPosition4Cake);
+            mStaggeredHomeAdapter = new StaggeredHomeAdapter(StaggeredGridLayoutActivity.this, mDatas4Cake, mResult, mPosition4Cake);
         }
         mAdapter[menu] = mStaggeredHomeAdapter;
         initEvent();
@@ -178,11 +176,11 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity  implements N
     }
 
     private void LeanSave() {
-        String[] nameArr = {"cafe","cake","strawberry","melon","lemon","coke","beer","wine","black forest","puff"};
-        int[] typeArr = {0,2,1,1,1,0,0,0,2,2};
-        for(int i=0;i<10;i++){
-            String name=nameArr[i];
-            int price = (int) (Math.random()*10+5);
+        String[] nameArr = {"cafe", "cake", "strawberry", "melon", "lemon", "coke", "beer", "wine", "black forest", "puff"};
+        int[] typeArr = {0, 2, 1, 1, 1, 0, 0, 0, 2, 2};
+        for (int i = 0; i < 10; i++) {
+            String name = nameArr[i];
+            int price = (int) (Math.random() * 10 + 5);
             int type = typeArr[i];
             AVObject Menu = new AVObject("Menu");
             Menu.put("name", name);
@@ -197,9 +195,8 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity  implements N
 
     }
 
-    private void initEvent()
-	{
-		mStaggeredHomeAdapter.setOnItemClickLitener(new OnItemClickLitener() {
+    private void initEvent() {
+        mStaggeredHomeAdapter.setOnItemClickLitener(new OnItemClickLitener() {
             @Override
             public void onItemClick(View view, int pos, Consumption mCon) {
                 /*mCon.addmSum(pos);
@@ -212,7 +209,7 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity  implements N
                         pos + " long click", Toast.LENGTH_SHORT).show();
             }
         });
-	}
+    }
 
     private void setupAVOSCloud(boolean config) {
         if (!config) {
@@ -226,7 +223,7 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity  implements N
     @Override
     public void onNavigationDrawerItemSelected(int position) {//newInstance
         // update the main content by replacing fragments
-        if(position==this.position){
+        if (position == this.position) {
             return;
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -234,6 +231,7 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity  implements N
                 .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
                 .commit();
     }
+
     //重置ActionBar
     public void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
@@ -241,6 +239,7 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity  implements N
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
     }
+
     //替换标题
     public void onSectionAttached(int number) {
         switch (number) {
@@ -248,7 +247,7 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity  implements N
                 mTitle = getString(R.string.title_section1);//默认已调用
                 position = MenuDrink;
                 //if(mAdapter[MenuDrink]!=null) {
-                    setAda(MenuDrink);
+                setAda(MenuDrink);
                 //}
                 break;
             case 2:
@@ -263,8 +262,7 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity  implements N
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
+    public boolean onCreateOptionsMenu(Menu menu) {
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
             getMenuInflater().inflate(R.menu.main_staggered, menu);//三个按钮
             //侧边栏
@@ -276,10 +274,8 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity  implements N
 
     //导航条，包括呼出菜单按钮
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch (item.getItemId())
-        {
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
             /*case R.id.id_action_add:
                 *//*mStaggeredHomeAdapter.addData(mDatas.size());*//*
                 return true;*/
@@ -287,15 +283,15 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity  implements N
                 //mStaggeredHomeAdapter.removeData(1);
                 mAdapter[0].setmAmount();
                 mAdapter[1].setmAmount();
-                if(mAdapter[0].getAmount() + mAdapter[1].getAmount()==0){
+                if (mAdapter[0].getAmount() + mAdapter[1].getAmount() == 0) {
                     return true;
                 }
-                Intent intent = new Intent(this , ResultActivity.class);
+                Intent intent = new Intent(this, ResultActivity.class);
                 ArrayList<String> temp = null;
                 temp = mAdapter[MenuDrink].getResult();
                 temp.addAll(mAdapter[MenuCake].getResult());
                 intent.putStringArrayListExtra("result", temp);
-                intent.putExtra("sum",mAdapter[MenuDrink].getSum() + mAdapter[MenuCake].getSum());
+                intent.putExtra("sum", mAdapter[MenuDrink].getSum() + mAdapter[MenuCake].getSum());
                 startActivity(intent);
                 return true;
             case R.id.id_action_reload:
@@ -319,18 +315,13 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity  implements N
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event)
-    {
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {
-            case KeyEvent.KEYCODE_BACK:
-            {
+            case KeyEvent.KEYCODE_BACK: {
                 backCount++;
-                if(backCount == 2)
-                {
+                if (backCount == 2) {
                     finish();
-                }
-                else
-                {
+                } else {
                     Toast.makeText(this, "再点击一次退出应用程序", Toast.LENGTH_SHORT).show();
                     new CountDownTimer(800 * 4, 500) {
                         public void onTick(long millisUntilFinished) {

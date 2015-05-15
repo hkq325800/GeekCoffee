@@ -1,6 +1,5 @@
 package com.example.administrator.geekcoffee;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
@@ -9,10 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -24,8 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 class StaggeredHomeAdapter extends
-		RecyclerView.Adapter<StaggeredHomeAdapter.MyViewHolder>
-{
+        RecyclerView.Adapter<StaggeredHomeAdapter.MyViewHolder> {
     private Context now;//this
     private LayoutInflater mInflater;//layout
     private List<Integer> mHeights;
@@ -35,22 +31,19 @@ class StaggeredHomeAdapter extends
     private List<String> mDatas;//每一组商品的名称
     private List<Integer> mReal;
 
-    public interface OnItemClickLitener
-	{
-		void onItemClick(View view, int pos, Consumption mCon);
+    public interface OnItemClickLitener {
+        void onItemClick(View view, int pos, Consumption mCon);
 
-		void onItemLongClick(View view, int pos);
-	}
+        void onItemLongClick(View view, int pos);
+    }
 
-	private OnItemClickLitener mOnItemClickLitener;
+    private OnItemClickLitener mOnItemClickLitener;
 
-	public void setOnItemClickLitener(OnItemClickLitener mOnItemClickLitener )
-	{
-		this.mOnItemClickLitener = mOnItemClickLitener;
-	}
+    public void setOnItemClickLitener(OnItemClickLitener mOnItemClickLitener) {
+        this.mOnItemClickLitener = mOnItemClickLitener;
+    }
 
-	public StaggeredHomeAdapter(Context context, List<String> datas, List<AVObject> result, List<Integer> realpos)
-	{
+    public StaggeredHomeAdapter(Context context, List<String> datas, List<AVObject> result, List<Integer> realpos) {
         now = context;
         mInflater = LayoutInflater.from(context);
         mHeights = new ArrayList<Integer>();
@@ -66,59 +59,54 @@ class StaggeredHomeAdapter extends
                 R.color.warning_stroke_color,
                 R.color.minionyellow
         };
-		for (int i = 0; i < getItemCount(); i++)
-		{
+        for (int i = 0; i < getItemCount(); i++) {
             mHeights.add((int) (350 + Math.random() * 300));
-            mColor.add(color[(int) (Math.random() *5)]);
+            mColor.add(color[(int) (Math.random() * 5)]);
             mCon.initcoldNum();
             mCon.inithotNum();
             mCon.initmSum();
             /*for(int j = 0; j < Config.MaxSize; j++){
                 mCon.setmDetailChild(i,j,0);
             }*/
-		}
-	}
+        }
+    }
 
-	@Override
-	public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
-	{
-		MyViewHolder holder = new MyViewHolder(mInflater.inflate(
-				R.layout.item_staggered_home, parent, false));
-		return holder;
-	}
+    @Override
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        MyViewHolder holder = new MyViewHolder(mInflater.inflate(
+                R.layout.item_staggered_home, parent, false));
+        return holder;
+    }
 
-	@Override
-	public void onBindViewHolder(final MyViewHolder holder, final int pos)//每次重现调用
-	{
-		LayoutParams lp = holder.custom_cross.getLayoutParams();
+    @Override
+    public void onBindViewHolder(final MyViewHolder holder, final int pos)//每次重现调用
+    {
+        LayoutParams lp = holder.custom_cross.getLayoutParams();
         holder.custom_cross.setBackgroundResource(mColor.get(pos));
-		lp.height = mHeights.get(pos);
-		holder.tv_item.setLayoutParams(lp);
+        lp.height = mHeights.get(pos);
+        holder.tv_item.setLayoutParams(lp);
 
-		holder.tv_item.setText(mDatas.get(pos)+"\n\n"+mResult.get(mReal.get(pos)).getInt("price"));
-        if (mCon.getmSum(pos) == 0){//若未预定恢复初始态
+        holder.tv_item.setText(mDatas.get(pos) + "\n\n" + mResult.get(mReal.get(pos)).getInt("price"));
+        if (mCon.getmSum(pos) == 0) {//若未预定恢复初始态
             setType1(holder);
         } else {//有预定填充数据
             setType2(holder);
-            fill(pos,holder);
+            fill(pos, holder);
         }
 
-		// 如果设置了回调，则设置点击事件
-		if (mOnItemClickLitener != null)
-		{
-			holder.itemView.setOnClickListener(new OnClickListener()
-			{
-				@Override
-				public void onClick(View v)
-				{
-					final int pos = holder.getLayoutPosition();
+        // 如果设置了回调，则设置点击事件
+        if (mOnItemClickLitener != null) {
+            holder.itemView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final int pos = holder.getLayoutPosition();
                     int type = mResult.get(mReal.get(pos)).getInt("type");//isDrink
                     if (mCon.getmSum(pos) == 0) {//设定为预定态
                         setType2(holder);
                     }
-                    if (type==1) {//若为饮料弹出选择
+                    if (type == 1) {//若为饮料弹出选择
                         //dialogBuild(holder,pos,dialog);
-                        final SweetAlertDialog pDialog = new SweetAlertDialog(now,SweetAlertDialog.SEEKBAR_TWO)
+                        final SweetAlertDialog pDialog = new SweetAlertDialog(now, SweetAlertDialog.SEEKBAR_TWO)
                                 .setTitleText("");
                         pDialog.setCancelable(true);
                         pDialog.setCanceledOnTouchOutside(true);
@@ -137,17 +125,17 @@ class StaggeredHomeAdapter extends
                                 pDialog.dismiss();
                                 mCon.setColdNum(pos, pDialog.getCold());
                                 mCon.setHotNum(pos, pDialog.getHot());
-                                mCon.setmSum(pos,pDialog.getCold() + pDialog.getHot());
-                                if(mCon.getmSum(pos)!=0) {
+                                mCon.setmSum(pos, pDialog.getCold() + pDialog.getHot());
+                                if (mCon.getmSum(pos) != 0) {
                                     holder.tv_sum.setText("数量:" + mCon.getmSum(pos));
-                                }else{
+                                } else {
                                     setType1(holder);
                                 }
                             }
                         });
                     } else {//若为蛋糕
                         /*holder.tv_sum.setText("共 " + (mCon.getmSum(pos) + 1) + " 个");*/
-                        final SweetAlertDialog pDialog = new SweetAlertDialog(now,SweetAlertDialog.SEEKBAR_ONE)
+                        final SweetAlertDialog pDialog = new SweetAlertDialog(now, SweetAlertDialog.SEEKBAR_ONE)
                                 .setTitleText("");
                         pDialog.setCancelable(true);
                         pDialog.setCanceledOnTouchOutside(true);
@@ -165,20 +153,20 @@ class StaggeredHomeAdapter extends
                                 pDialog.dismiss();
                                 mCon.setColdNum(pos, pDialog.getCold());
                                 mCon.setmSum(pos, pDialog.getCold());
-                                if(mCon.getmSum(pos)!=0) {
+                                if (mCon.getmSum(pos) != 0) {
                                     holder.tv_sum.setText("数量:" + mCon.getmSum(pos));
-                                }else{
+                                } else {
                                     setType1(holder);
                                 }
                             }
                         });
                     }
-					mOnItemClickLitener.onItemClick(holder.itemView, pos, mCon);//view,position
-				}
-			});
+                    mOnItemClickLitener.onItemClick(holder.itemView, pos, mCon);//view,position
+                }
+            });
 
 			/*holder.itemView.setOnLongClickListener(new OnLongClickListener()
-			{
+            {
 				@Override
 				public boolean onLongClick(View v)
 				{
@@ -188,51 +176,50 @@ class StaggeredHomeAdapter extends
 					return false;
 				}
 			});*/
-		}
-	}
+        }
+    }
 
     private void fill(int pos, MyViewHolder holder) {
         holder.tv_sum.setText("数量:" + mCon.getmSum(pos));
     }
 
-    public void setmAmount(){
+    public void setmAmount() {
         mCon.setmAmount();
     }
 
-    private void setType1(MyViewHolder holder){
+    private void setType1(MyViewHolder holder) {
         holder.tv_sum.setVisibility(View.INVISIBLE);
         holder.tv_temp.setVisibility(View.INVISIBLE);
         holder.tv_temp.setText("");
         holder.tv_sum.setText("");
     }
 
-    private void setType2(MyViewHolder holder){
+    private void setType2(MyViewHolder holder) {
         holder.tv_sum.setVisibility(View.VISIBLE);
         holder.tv_temp.setVisibility(View.VISIBLE);
     }
 
-	@Override
-	public int getItemCount()
-	{
-		return mDatas.size();
-	}
+    @Override
+    public int getItemCount() {
+        return mDatas.size();
+    }
 
     public int getSum() {
         int sum = 0;
-        for(int i=0; i<getItemCount();i++){
+        for (int i = 0; i < getItemCount(); i++) {
             sum += mCon.getmSum(i) * mResult.get(mReal.get(i)).getInt("price");
         }
         return sum;
     }
 
-    public int getAmount(){
+    public int getAmount() {
         return mCon.getmAmount();
     }
 
-	public void addData(int pos)//弹出一窗口供填写表单
-	{
-		mDatas.add(pos, "One");
-		mHeights.add((int) (350 + Math.random() * 300));//3:100+Math.random()*300
+    public void addData(int pos)//弹出一窗口供填写表单
+    {
+        mDatas.add(pos, "One");
+        mHeights.add((int) (350 + Math.random() * 300));//3:100+Math.random()*300
         mCon.initmSum();
         mCon.inithotNum();
         mCon.initcoldNum();
@@ -253,11 +240,10 @@ class StaggeredHomeAdapter extends
             mResult.add(Menu);//同步至缓存
         }
 
-		notifyItemInserted(pos);
-	}
+        notifyItemInserted(pos);
+    }
 
-	public void removeData(int pos)
-	{
+    public void removeData(int pos) {
         mDatas.remove(pos);
         mHeights.remove(pos);
         mCon.removemSum(pos);
@@ -272,10 +258,10 @@ class StaggeredHomeAdapter extends
         del.deleteInBackground();
         mReal.remove(pos);
         mColor.remove(pos);
-		notifyItemRemoved(pos);
-	}
+        notifyItemRemoved(pos);
+    }
 
-    public void removeAll(){
+    public void removeAll() {
         mDatas.removeAll(mDatas);
         mHeights.removeAll(mHeights);
         mCon.removeAllmSum();
@@ -290,49 +276,46 @@ class StaggeredHomeAdapter extends
         mColor.removeAll(mColor);
     }
 
-    public void removeAllResult(){
+    public void removeAllResult() {
         mResult.removeAll(mResult);
     }
 
-    public ArrayList<String> getResult(){
+    public ArrayList<String> getResult() {
         ArrayList<String> result = new ArrayList();
-        for (int i = 0; i < getItemCount(); i++){
-            if (mCon.getmSum(i) != 0){//区分是否有预定
-                 int sum = mResult.get(mReal.get(i)).getInt("price") * mCon.getmSum(i);
-                 if (mResult.get(mReal.get(i)).getInt("type")==1){//drink
-                     String hot;
-                     String cold;
-                     hot = mCon.gethotNum(i) != 0 ? " 热 *" + mCon.gethotNum(i) : "";
-                     cold = mCon.getcoldNum(i) != 0 ? " 冷 *" + mCon.getcoldNum(i) : "";
-                     result.add(mDatas.get(i) + hot + cold  );//+ " = " + sum
-                 } else {
-                     result.add(mDatas.get(i) + " * " + mCon.getmSum(i)); //+ " = " + sum );
-                 }
+        for (int i = 0; i < getItemCount(); i++) {
+            if (mCon.getmSum(i) != 0) {//区分是否有预定
+                int sum = mResult.get(mReal.get(i)).getInt("price") * mCon.getmSum(i);
+                if (mResult.get(mReal.get(i)).getInt("type") == 1) {//drink
+                    String hot;
+                    String cold;
+                    hot = mCon.gethotNum(i) != 0 ? " 热 *" + mCon.gethotNum(i) : "";
+                    cold = mCon.getcoldNum(i) != 0 ? " 冷 *" + mCon.getcoldNum(i) : "";
+                    result.add(mDatas.get(i) + hot + cold);//+ " = " + sum
+                } else {
+                    result.add(mDatas.get(i) + " * " + mCon.getmSum(i)); //+ " = " + sum );
+                }
             }
         }
         return result;
     }
 
 
-
-	class MyViewHolder extends ViewHolder
-	{
+    class MyViewHolder extends ViewHolder {
         RelativeLayout custom_cross;
-		TextView tv_item;
+        TextView tv_item;
         TextView tv_sum;
         TextView tv_temp;
         /*Button btn_cut;
         Button btn_add;*/
 
-		public MyViewHolder(View view)
-		{
-			super(view);
+        public MyViewHolder(View view) {
+            super(view);
             custom_cross = (RelativeLayout) view.findViewById(R.id.cross);
             tv_item = (TextView) view.findViewById(R.id.tv_item);
             tv_sum = (TextView) view.findViewById(R.id.tv_sum);
             tv_temp = (TextView) view.findViewById(R.id.tv_temp);
-		}
-	}
+        }
+    }
 
 
 }
