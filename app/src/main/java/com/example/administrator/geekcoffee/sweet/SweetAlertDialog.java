@@ -74,7 +74,15 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
     public static final int CUSTOM_IMAGE_TYPE = 4;
     public static final int PROGRESS_TYPE = 5;
     public static final int SEEKBAR_TWO = 6;
-    public static final int SEEKBAR_ONE = 7;
+    public static final int SEEKBAR_ONE_DRINK = 7;
+    public static final int SEEKBAR_ONE_COLD = 8;
+    public static final int SEEKBAR_ONE_HOT = 9;
+    public static final int SEEKBAR_ONE_POT = 10;
+    public static final int SEEKBAR_ONE_GLASS = 11;
+    public static final int SEEKBAR_ONE_SNACK = 12;
+    public static final int SEEKBAR_ONE_MEAL = 13;
+    public static final int SEEKBAR_ONE_BEARFRUIT = 14;
+    public static final int SEEKBAR_ONE_CAKE = 15;
 
     public static interface OnSweetClickListener {
         public void onClick (SweetAlertDialog sweetAlertDialog);
@@ -173,11 +181,11 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
         text1 = (TextView) findViewById(R.id.tv1);
         text2 = (TextView) findViewById(R.id.tv2);
         mSeekBar = (RelativeLayout) findViewById(R.id.seekbar);
-        mProgressHelper.setProgressWheel((ProgressWheel)findViewById(R.id.progressWheel));
+        mProgressHelper.setProgressWheel((ProgressWheel) findViewById(R.id.progressWheel));
         mConfirmButton.setOnClickListener(this);
         mCancelButton.setOnClickListener(this);
 
-        setCustom(getAlerType());
+        setCustom(mAlertType);
         setTitleText(mTitleText);
         setContentText(mContentText);
         setCancelText(mCancelText);
@@ -455,9 +463,40 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
                     sb2.setProgress(sb2.getProgress() + 1);
                 }
             });
-        }else if(alertType==SEEKBAR_ONE){
+        }else if(alertType>6){
             mSeekBar.setVisibility(View.VISIBLE);
-            iv1.setImageResource(R.drawable.cold1);
+            switch (alertType){
+                case SEEKBAR_ONE_DRINK:
+                    iv1.setImageResource(R.drawable.cold1);
+                    break;
+                case SEEKBAR_ONE_COLD:
+                    iv1.setImageResource(R.drawable.cold_only);
+                    break;
+                case SEEKBAR_ONE_HOT:
+                    iv1.setImageResource(R.drawable.hot_only);
+                    break;
+                case SEEKBAR_ONE_POT:
+                    iv1.setImageResource(R.drawable.pot);
+                    break;
+                case SEEKBAR_ONE_GLASS:
+                    iv1.setImageResource(R.drawable.glass);
+                    break;
+                case SEEKBAR_ONE_SNACK:
+                    iv1.setImageResource(R.drawable.snack);
+                    break;
+                case SEEKBAR_ONE_MEAL:
+                    iv1.setImageResource(R.drawable.meal);
+                    break;
+                case SEEKBAR_ONE_BEARFRUIT:
+                    iv1.setImageResource(R.drawable.bear_fruit);
+                    break;
+                case SEEKBAR_ONE_CAKE:
+                    iv1.setImageResource(R.drawable.cake);
+                    break;
+                default:
+                    break;
+            }
+            //iv1.setImageResource(R.drawable.cold1);
             text1.setTextColor(Color.BLACK);
             sb1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
@@ -485,19 +524,19 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
         return this;
     }
 
-    public int getCold(){
+    public int getFirst(){
         return sb1.getProgress();
     }
 
-    public int getHot(){
+    public int getSecond(){
         return sb2.getProgress();
     }
 
-    public void setCold(int value){
+    public void setFirst(int value){
         sb1.setProgress(value);
     }
 
-    public void setHot(int value){
+    public void setSecond(int value){
         sb2.setProgress(value);
     }
 }

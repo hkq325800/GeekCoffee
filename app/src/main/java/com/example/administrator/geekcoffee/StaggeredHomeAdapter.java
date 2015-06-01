@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -60,7 +61,7 @@ class StaggeredHomeAdapter extends
                 R.color.minionyellow
         };
         for (int i = 0; i < getItemCount(); i++) {
-            mHeights.add((int) (350 + Math.random() * 300));
+            mHeights.add((int) (500 + Math.random() * 180));
             mColor.add(color[(int) (Math.random() * 5)]);
             mCon.initcoldNum();
             mCon.inithotNum();
@@ -84,9 +85,11 @@ class StaggeredHomeAdapter extends
         LayoutParams lp = holder.custom_cross.getLayoutParams();
         holder.custom_cross.setBackgroundResource(mColor.get(pos));
         lp.height = mHeights.get(pos);
-        holder.tv_item.setLayoutParams(lp);
-
-        holder.tv_item.setText(mDatas.get(pos) + "\n\n" + mResult.get(mReal.get(pos)).getInt("price"));
+        /*holder.tv_item.setLayoutParams(lp);
+        holder.tv_price.setLayoutParams(lp);*/
+        holder.iv_item.setImageResource(R.drawable.ic_launcher);
+        holder.tv_item.setText(mDatas.get(pos));
+        holder.tv_price.setText(mResult.get(mReal.get(pos)).getInt("price") + "");
         if (mCon.getmSum(pos) == 0) {//若未预定恢复初始态
             setType1(holder);
         } else {//有预定填充数据
@@ -104,10 +107,16 @@ class StaggeredHomeAdapter extends
                     if (mCon.getmSum(pos) == 0) {//设定为预定态
                         setType2(holder);
                     }
-                    if (type == 1) {//若为饮料弹出选择
+                    if (type == 1 || type == 0 || type == 2) {//花式
                         //dialogBuild(holder,pos,dialog);
-                        final SweetAlertDialog pDialog = new SweetAlertDialog(now, SweetAlertDialog.SEEKBAR_TWO)
-                                .setTitleText("");
+                        final SweetAlertDialog pDialog;
+                        if (type == 2) {
+                            pDialog = new SweetAlertDialog(now, SweetAlertDialog.SEEKBAR_TWO)
+                                    .setTitleText("");
+                        } else {
+                            pDialog = new SweetAlertDialog(now, SweetAlertDialog.SEEKBAR_ONE_DRINK)
+                                    .setTitleText("");
+                        }
                         pDialog.setCancelable(true);
                         pDialog.setCanceledOnTouchOutside(true);
                         pDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -117,15 +126,15 @@ class StaggeredHomeAdapter extends
                             }
                         });
                         pDialog.show();
-                        pDialog.setCold(mCon.getcoldNum(pos));
-                        pDialog.setHot(mCon.gethotNum(pos));
+                        pDialog.setFirst(mCon.getcoldNum(pos));
+                        pDialog.setSecond(mCon.gethotNum(pos));
                         pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(SweetAlertDialog sweetAlertDialog) {
                                 pDialog.dismiss();
-                                mCon.setColdNum(pos, pDialog.getCold());
-                                mCon.setHotNum(pos, pDialog.getHot());
-                                mCon.setmSum(pos, pDialog.getCold() + pDialog.getHot());
+                                mCon.setColdNum(pos, pDialog.getFirst());
+                                mCon.setHotNum(pos, pDialog.getSecond());
+                                mCon.setmSum(pos, pDialog.getFirst() + pDialog.getSecond());
                                 if (mCon.getmSum(pos) != 0) {
                                     holder.tv_sum.setText("数量:" + mCon.getmSum(pos));
                                 } else {
@@ -133,9 +142,9 @@ class StaggeredHomeAdapter extends
                                 }
                             }
                         });
-                    } else {//若为蛋糕
+                    } else if (type == 3) {//若为单品
                         /*holder.tv_sum.setText("共 " + (mCon.getmSum(pos) + 1) + " 个");*/
-                        final SweetAlertDialog pDialog = new SweetAlertDialog(now, SweetAlertDialog.SEEKBAR_ONE)
+                        final SweetAlertDialog pDialog = new SweetAlertDialog(now, SweetAlertDialog.SEEKBAR_ONE_DRINK)
                                 .setTitleText("");
                         pDialog.setCancelable(true);
                         pDialog.setCanceledOnTouchOutside(true);
@@ -146,13 +155,41 @@ class StaggeredHomeAdapter extends
                             }
                         });
                         pDialog.show();
-                        pDialog.setCold(mCon.getcoldNum(pos));
+                        pDialog.setFirst(mCon.getcoldNum(pos));
                         pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(SweetAlertDialog sweetAlertDialog) {
                                 pDialog.dismiss();
-                                mCon.setColdNum(pos, pDialog.getCold());
-                                mCon.setmSum(pos, pDialog.getCold());
+                                mCon.setColdNum(pos, pDialog.getFirst());
+                                mCon.setmSum(pos, pDialog.getFirst());
+                                if (mCon.getmSum(pos) != 0) {
+                                    holder.tv_sum.setText("数量:" + mCon.getmSum(pos));
+                                } else {
+                                    setType1(holder);
+                                }
+                            }
+                        });
+                    } /*else if (type == 4 || type == 0) {//茶
+
+                    } */else {
+                        final SweetAlertDialog pDialog = new SweetAlertDialog(now, SweetAlertDialog.SEEKBAR_ONE_SNACK)
+                                .setTitleText("");
+                        pDialog.setCancelable(true);
+                        pDialog.setCanceledOnTouchOutside(true);
+                        pDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                            @Override
+                            public void onCancel(DialogInterface dialog) {
+                                pDialog.dismiss();
+                            }
+                        });
+                        pDialog.show();
+                        pDialog.setFirst(mCon.getcoldNum(pos));
+                        pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                pDialog.dismiss();
+                                mCon.setColdNum(pos, pDialog.getFirst());
+                                mCon.setmSum(pos, pDialog.getFirst());
                                 if (mCon.getmSum(pos) != 0) {
                                     holder.tv_sum.setText("数量:" + mCon.getmSum(pos));
                                 } else {
@@ -161,7 +198,18 @@ class StaggeredHomeAdapter extends
                             }
                         });
                     }
-                    mOnItemClickLitener.onItemClick(holder.itemView, pos, mCon);//view,position
+                    /*else if (type == 6) {//饮料
+
+                    } else if (type == 7) {//零食
+
+                    } else if (type == 8) {//小吃
+
+                    } else if (type == 9) {//啤果
+
+                    } else if (type == 10) {//夏日
+
+                    }*/
+                        mOnItemClickLitener.onItemClick(holder.itemView, pos, mCon);//view,position
                 }
             });
 
@@ -189,14 +237,14 @@ class StaggeredHomeAdapter extends
 
     private void setType1(MyViewHolder holder) {
         holder.tv_sum.setVisibility(View.INVISIBLE);
-        holder.tv_temp.setVisibility(View.INVISIBLE);
-        holder.tv_temp.setText("");
+        //holder.tv_temp.setVisibility(View.INVISIBLE);
+        //holder.tv_temp.setText("");
         holder.tv_sum.setText("");
     }
 
     private void setType2(MyViewHolder holder) {
         holder.tv_sum.setVisibility(View.VISIBLE);
-        holder.tv_temp.setVisibility(View.VISIBLE);
+        //holder.tv_temp.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -285,7 +333,7 @@ class StaggeredHomeAdapter extends
         for (int i = 0; i < getItemCount(); i++) {
             if (mCon.getmSum(i) != 0) {//区分是否有预定
                 int sum = mResult.get(mReal.get(i)).getInt("price") * mCon.getmSum(i);
-                if (mResult.get(mReal.get(i)).getInt("type") == 1) {//drink
+                if (mResult.get(mReal.get(i)).getInt("type") == 2) {//drink
                     String hot;
                     String cold;
                     hot = mCon.gethotNum(i) != 0 ? " 热 *" + mCon.gethotNum(i) : "";
@@ -304,7 +352,9 @@ class StaggeredHomeAdapter extends
         RelativeLayout custom_cross;
         TextView tv_item;
         TextView tv_sum;
-        TextView tv_temp;
+        TextView tv_price;
+        ImageView iv_item;
+        //TextView tv_temp;
         /*Button btn_cut;
         Button btn_add;*/
 
@@ -313,7 +363,9 @@ class StaggeredHomeAdapter extends
             custom_cross = (RelativeLayout) view.findViewById(R.id.cross);
             tv_item = (TextView) view.findViewById(R.id.tv_item);
             tv_sum = (TextView) view.findViewById(R.id.tv_sum);
-            tv_temp = (TextView) view.findViewById(R.id.tv_temp);
+            tv_price = (TextView) view.findViewById(R.id.tv_price);
+            iv_item = (ImageView) view.findViewById(R.id.iv_item);
+            //tv_temp = (TextView) view.findViewById(R.id.tv_temp);
         }
     }
 

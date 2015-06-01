@@ -12,4 +12,5 @@ public class Config {
     public static String MASTER_KEY="wiuf9nz2ntjw0635re63o9naq53ppz877itnqv53xdueptdl";
 
     public static int MaxSize = 20;//每个单项可点最大数量
+    public static int Amount = 8;
 }

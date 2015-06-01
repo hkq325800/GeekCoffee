@@ -12,10 +12,10 @@ import android.widget.Toast;
 /**
  * Created by Administrator on 2015/4/26 0026.
  */
-public class CrossButtonLayout extends RelativeLayout{
+public class CrossButtonLayout extends RelativeLayout {
     public CrossButtonLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        LayoutInflater.from(context).inflate(R.layout.custom_cross,this);
+        LayoutInflater.from(context).inflate(R.layout.custom_cross, this);
         /*btn_cut.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

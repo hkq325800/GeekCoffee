@@ -2,9 +2,14 @@
     <!---->
     <string name="app_name">GeekCoffee</string>
 
-    <string name="title_section1">饮料类</string>
-    <string name="title_section2">糕点类</string>
-    <string name="title_section3">Section 3</string>
+    <string name="title_section1">花式咖啡</string>
+    <string name="title_section2">单品咖啡</string>
+    <string name="title_section3">茶</string>
+    <string name="title_section4">饮料</string>
+    <string name="title_section5">零食</string>
+    <string name="title_section6">小吃</string>
+    <string name="title_section7">啤酒&amp;果盘</string>
+    <string name="title_section8">夏日特推</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
