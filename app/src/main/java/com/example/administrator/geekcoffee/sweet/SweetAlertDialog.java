@@ -85,7 +85,7 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
     public static final int SEEKBAR_ONE_CAKE = 15;
 
     public static interface OnSweetClickListener {
-        public void onClick (SweetAlertDialog sweetAlertDialog);
+        public void onClick(SweetAlertDialog sweetAlertDialog);
     }
 
     public SweetAlertDialog(Context context) {
@@ -99,13 +99,13 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
         mProgressHelper = new ProgressHelper(context);
         mAlertType = alertType;
         mErrorInAnim = OptAnimationLoader.loadAnimation(getContext(), R.anim.error_frame_in);
-        mErrorXInAnim = (AnimationSet)OptAnimationLoader.loadAnimation(getContext(), R.anim.error_x_in);
+        mErrorXInAnim = (AnimationSet) OptAnimationLoader.loadAnimation(getContext(), R.anim.error_x_in);
         // 2.3.x system don't support alpha-animation on layer-list drawable
         // remove it from animation set
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
             List<Animation> childAnims = mErrorXInAnim.getAnimations();
             int idx = 0;
-            for (;idx < childAnims.size();idx++) {
+            for (; idx < childAnims.size(); idx++) {
                 if (childAnims.get(idx) instanceof AlphaAnimation) {
                     break;
                 }
@@ -115,7 +115,7 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
             }
         }
         mSuccessBowAnim = OptAnimationLoader.loadAnimation(getContext(), R.anim.success_bow_roate);
-        mSuccessLayoutAnimSet = (AnimationSet)OptAnimationLoader.loadAnimation(getContext(), R.anim.success_mask_layout);
+        mSuccessLayoutAnimSet = (AnimationSet) OptAnimationLoader.loadAnimation(getContext(), R.anim.success_mask_layout);
         mModalInAnim = (AnimationSet) OptAnimationLoader.loadAnimation(getContext(), R.anim.modal_in);
         mModalOutAnim = (AnimationSet) OptAnimationLoader.loadAnimation(getContext(), R.anim.modal_out);
         mModalOutAnim.setAnimationListener(new Animation.AnimationListener() {
@@ -161,19 +161,19 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
         setContentView(R.layout.alert_dialog);
 
         mDialogView = getWindow().getDecorView().findViewById(android.R.id.content);
-        mTitleTextView = (TextView)findViewById(R.id.title_text);
-        mContentTextView = (TextView)findViewById(R.id.content_text);
-        mErrorFrame = (FrameLayout)findViewById(R.id.error_frame);
-        mErrorX = (ImageView)mErrorFrame.findViewById(R.id.error_x);
-        mSuccessFrame = (FrameLayout)findViewById(R.id.success_frame);
-        mProgressFrame = (FrameLayout)findViewById(R.id.progress_dialog);
-        mSuccessTick = (SuccessTickView)mSuccessFrame.findViewById(R.id.success_tick);
+        mTitleTextView = (TextView) findViewById(R.id.title_text);
+        mContentTextView = (TextView) findViewById(R.id.content_text);
+        mErrorFrame = (FrameLayout) findViewById(R.id.error_frame);
+        mErrorX = (ImageView) mErrorFrame.findViewById(R.id.error_x);
+        mSuccessFrame = (FrameLayout) findViewById(R.id.success_frame);
+        mProgressFrame = (FrameLayout) findViewById(R.id.progress_dialog);
+        mSuccessTick = (SuccessTickView) mSuccessFrame.findViewById(R.id.success_tick);
         mSuccessLeftMask = mSuccessFrame.findViewById(R.id.mask_left);
         mSuccessRightMask = mSuccessFrame.findViewById(R.id.mask_right);
-        mCustomImage = (ImageView)findViewById(R.id.custom_image);
-        mWarningFrame = (FrameLayout)findViewById(R.id.warning_frame);
-        mConfirmButton = (Button)findViewById(R.id.confirm_button);
-        mCancelButton = (Button)findViewById(R.id.cancel_button);
+        mCustomImage = (ImageView) findViewById(R.id.custom_image);
+        mWarningFrame = (FrameLayout) findViewById(R.id.warning_frame);
+        mConfirmButton = (Button) findViewById(R.id.confirm_button);
+        mCancelButton = (Button) findViewById(R.id.cancel_button);
         sb1 = (SeekBar) findViewById(R.id.sb1);
         sb2 = (SeekBar) findViewById(R.id.sb2);
         iv1 = (ImageView) findViewById(R.id.iv1);
@@ -194,7 +194,7 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
 
     }
 
-    private void restore () {
+    private void restore() {
         mCustomImage.setVisibility(View.GONE);
         mErrorFrame.setVisibility(View.GONE);
         mSuccessFrame.setVisibility(View.GONE);
@@ -211,7 +211,7 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
         mSuccessRightMask.clearAnimation();
     }
 
-    private void playAnimation () {//4
+    private void playAnimation() {//4
         if (mAlertType == ERROR_TYPE) {
             mErrorFrame.startAnimation(mErrorInAnim);
             mErrorX.startAnimation(mErrorXInAnim);
@@ -257,7 +257,7 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
         }
     }
 
-    public int getAlerType () {
+    public int getAlerType() {
         return mAlertType;
     }
 
@@ -266,11 +266,11 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
     }
 
 
-    public String getTitleText () {
+    public String getTitleText() {
         return mTitleText;
     }
 
-    public SweetAlertDialog setTitleText (String text) {
+    public SweetAlertDialog setTitleText(String text) {
         mTitleText = text;
         if (mTitleTextView != null && mTitleText != null) {
             mTitleTextView.setText(mTitleText);
@@ -278,7 +278,7 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
         return this;
     }
 
-    public SweetAlertDialog setCustomImage (Drawable drawable) {
+    public SweetAlertDialog setCustomImage(Drawable drawable) {
         mCustomImgDrawable = drawable;
         if (mCustomImage != null && mCustomImgDrawable != null) {
             mCustomImage.setVisibility(View.VISIBLE);
@@ -287,15 +287,15 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
         return this;
     }
 
-    public SweetAlertDialog setCustomImage (int resourceId) {
+    public SweetAlertDialog setCustomImage(int resourceId) {
         return setCustomImage(getContext().getResources().getDrawable(resourceId));
     }
 
-    public String getContentText () {
+    public String getContentText() {
         return mContentText;
     }
 
-    public SweetAlertDialog setContentText (String text) {
+    public SweetAlertDialog setContentText(String text) {
         mContentText = text;
         if (mContentTextView != null && mContentText != null) {
             showContentText(true);
@@ -304,11 +304,11 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
         return this;
     }
 
-    public boolean isShowCancelButton () {
+    public boolean isShowCancelButton() {
         return mShowCancel;
     }
 
-    public SweetAlertDialog showCancelButton (boolean isShow) {
+    public SweetAlertDialog showCancelButton(boolean isShow) {
         mShowCancel = isShow;
         if (mCancelButton != null) {
             mCancelButton.setVisibility(mShowCancel ? View.VISIBLE : View.GONE);
@@ -316,11 +316,11 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
         return this;
     }
 
-    public boolean isShowContentText () {
+    public boolean isShowContentText() {
         return mShowContent;
     }
 
-    public SweetAlertDialog showContentText (boolean isShow) {
+    public SweetAlertDialog showContentText(boolean isShow) {
         mShowContent = isShow;
         if (mContentTextView != null) {
             mContentTextView.setVisibility(mShowContent ? View.VISIBLE : View.GONE);
@@ -328,11 +328,11 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
         return this;
     }
 
-    public String getCancelText () {
+    public String getCancelText() {
         return mCancelText;
     }
 
-    public SweetAlertDialog setCancelText (String text) {
+    public SweetAlertDialog setCancelText(String text) {
         mCancelText = text;
         if (mCancelButton != null && mCancelText != null) {
             showCancelButton(true);
@@ -341,11 +341,11 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
         return this;
     }
 
-    public String getConfirmText () {
+    public String getConfirmText() {
         return mConfirmText;
     }
 
-    public SweetAlertDialog setConfirmText (String text) {
+    public SweetAlertDialog setConfirmText(String text) {
         mConfirmText = text;
         if (mConfirmButton != null && mConfirmText != null) {
             mConfirmButton.setText(mConfirmText);
@@ -353,12 +353,12 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
         return this;
     }
 
-    public SweetAlertDialog setCancelClickListener (OnSweetClickListener listener) {
+    public SweetAlertDialog setCancelClickListener(OnSweetClickListener listener) {
         mCancelClickListener = listener;
         return this;
     }
 
-    public SweetAlertDialog setConfirmClickListener (OnSweetClickListener listener) {
+    public SweetAlertDialog setConfirmClickListener(OnSweetClickListener listener) {
         mConfirmClickListener = listener;
         return this;
     }
@@ -406,13 +406,13 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
         }
     }
 
-    public ProgressHelper getProgressHelper () {//5
+    public ProgressHelper getProgressHelper() {//5
         return mProgressHelper;
     }
 
-    public SweetAlertDialog setCustom(int alertType){
+    public SweetAlertDialog setCustom(int alertType) {
         mTitleTextView.setVisibility(View.GONE);
-        if(alertType==SEEKBAR_TWO) {
+        if (alertType == SEEKBAR_TWO) {
             mSeekBar.setVisibility(View.VISIBLE);
             iv2.setVisibility(View.VISIBLE);
             sb2.setVisibility(View.VISIBLE);
@@ -463,23 +463,29 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
                     sb2.setProgress(sb2.getProgress() + 1);
                 }
             });
-        }else if(alertType>6){
+        } else if (alertType > 6) {
             mSeekBar.setVisibility(View.VISIBLE);
-            switch (alertType){
+            text1.setTextColor(Color.BLACK);
+            switch (alertType) {
                 case SEEKBAR_ONE_DRINK:
                     iv1.setImageResource(R.drawable.cold1);
+                    text1.setTextColor(Color.GRAY);
                     break;
                 case SEEKBAR_ONE_COLD:
                     iv1.setImageResource(R.drawable.cold_only);
+                    text1.setTextColor(getContext().getResources().getColor(R.color.blue_btn_bg_color));
                     break;
                 case SEEKBAR_ONE_HOT:
                     iv1.setImageResource(R.drawable.hot_only);
+                    text1.setTextColor(Color.RED);
                     break;
                 case SEEKBAR_ONE_POT:
                     iv1.setImageResource(R.drawable.pot);
+                    text1.setTextColor(Color.GRAY);
                     break;
                 case SEEKBAR_ONE_GLASS:
                     iv1.setImageResource(R.drawable.glass);
+                    text1.setTextColor(Color.GRAY);
                     break;
                 case SEEKBAR_ONE_SNACK:
                     iv1.setImageResource(R.drawable.snack);
@@ -489,6 +495,7 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
                     break;
                 case SEEKBAR_ONE_BEARFRUIT:
                     iv1.setImageResource(R.drawable.bear_fruit);
+                    text1.setTextColor(Color.GRAY);
                     break;
                 case SEEKBAR_ONE_CAKE:
                     iv1.setImageResource(R.drawable.cake);
@@ -497,7 +504,6 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
                     break;
             }
             //iv1.setImageResource(R.drawable.cold1);
-            text1.setTextColor(Color.BLACK);
             sb1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -524,19 +530,19 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
         return this;
     }
 
-    public int getFirst(){
+    public int getFirst() {
         return sb1.getProgress();
     }
 
-    public int getSecond(){
+    public int getSecond() {
         return sb2.getProgress();
     }
 
-    public void setFirst(int value){
+    public void setFirst(int value) {
         sb1.setProgress(value);
     }
 
-    public void setSecond(int value){
+    public void setSecond(int value) {
         sb2.setProgress(value);
     }
 }

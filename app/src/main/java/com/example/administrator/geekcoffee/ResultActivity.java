@@ -13,7 +13,6 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
-import com.avos.avoscloud.SaveCallback;
 import com.example.administrator.geekcoffee.sweet.SweetAlertDialog;
 
 import java.text.SimpleDateFormat;
@@ -87,12 +86,12 @@ public class ResultActivity extends Activity {
                     List.put("longID", id);
                     List.put("list", finalList);
                     List.put("sum", sum);
-                    List.saveInBackground(new SaveCallback() {
+                    List.saveInBackground();/*(new SaveCallback() {
                         @Override
                         public void done(AVException e) {
-                            pDialog.dismiss();
+                            //pDialog.dismiss();
                         }
-                    });//saveInBackground()后台保存
+                    });*///saveInBackground()后台保存
                     Toast.makeText(ResultActivity.this, "已提交", Toast.LENGTH_SHORT).show();
                     redirect();
                 } else {

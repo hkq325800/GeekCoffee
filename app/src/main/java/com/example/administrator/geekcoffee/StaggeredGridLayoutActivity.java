@@ -420,14 +420,14 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity implements Na
                 }
                 setAda(MenuPiGuo);
                 break;
-            case 8:
+            /*case 8:
                 mTitle = getString(R.string.title_section8);
                 position = MenuXiaRi;
                 if (mDatas4XiaRi.size() == 0 || mPosition4XiaRi.size() == 0) {
                     getAda(MenuXiaRi);
                 }
                 setAda(MenuXiaRi);
-                break;
+                break;*/
             default:
                 break;
         }
@@ -473,8 +473,8 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity implements Na
                 startActivity(intent);
                 return true;
             case R.id.id_action_reload:
-                for(int i=0;i<Config.Amount;i++){
-                    if(isGetAda[i]==true) {
+                for (int i = 0; i < Config.Amount; i++) {
+                    if (isGetAda[i] == true) {
                         mAdapter[i].removeAll();
                         mAdapter[i].removeAllResult();
                     }
