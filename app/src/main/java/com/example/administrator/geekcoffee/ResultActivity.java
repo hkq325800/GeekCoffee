@@ -52,6 +52,7 @@ public class ResultActivity extends Activity {
                 saveInLeanCloud(result, sum);
             }
         });
+        System.gc();
     }
 
     private void saveInLeanCloud(List<String> result, final int sum) {

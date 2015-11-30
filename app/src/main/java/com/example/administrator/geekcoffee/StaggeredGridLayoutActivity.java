@@ -68,7 +68,7 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity implements Na
     private StaggeredHomeAdapter mStaggeredHomeAdapter;
     private StaggeredHomeAdapter[] mAdapter = new StaggeredHomeAdapter[Config.Amount];
     private boolean[] isGetAda = new boolean[Config.Amount];
-
+    SweetAlertDialog pDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,7 +88,7 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity implements Na
     }
 
     private void init() {//初始化数据
-        final SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE)
+        pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE)
                 .setTitleText("Loading");
         pDialog.show();
         pDialog.setCancelable(false);
@@ -179,77 +179,125 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity implements Na
     private void getAda(int menu) {//获取需要的Ada
         switch (menu) {
             case MenuHuashi:
-                for (int i = 0; i < mResult.size(); i++) {
-                    int type = mResult.get(i).getInt("type");
-                    if (type == 0 || type == 1 || type == 2) {
-                        mDatas4Huashi.add(mResult.get(i).getString("name"));
-                        mPosition4Huashi.add(i);
+                if (mDatas4Huashi.size() == 0) {
+                    for (int i = 0; i < mResult.size(); i++) {
+                        int type = mResult.get(i).getInt("type");
+                        if (type == 0 || type == 1 || type == 2) {
+                            mDatas4Huashi.add(mResult.get(i).getString("name"));
+                            mPosition4Huashi.add(i);
+                        }
                     }
                 }
-                mStaggeredHomeAdapter = new StaggeredHomeAdapter(StaggeredGridLayoutActivity.this, mDatas4Huashi, mResult, mPosition4Huashi);
+                mStaggeredHomeAdapter = new StaggeredHomeAdapter(
+                        StaggeredGridLayoutActivity.this
+                        , mDatas4Huashi
+                        , mResult
+                        , mPosition4Huashi);
                 break;
             case MenuDanpin:
-                for (int i = 0; i < mResult.size(); i++) {
-                    if (mResult.get(i).getInt("type") == 3) {
-                        mDatas4Danpin.add(mResult.get(i).getString("name"));
-                        mPosition4Danpin.add(i);
+                if (mDatas4Danpin.size() == 0) {
+                    for (int i = 0; i < mResult.size(); i++) {
+                        if (mResult.get(i).getInt("type") == 3) {
+                            mDatas4Danpin.add(mResult.get(i).getString("name"));
+                            mPosition4Danpin.add(i);
+                        }
                     }
                 }
-                mStaggeredHomeAdapter = new StaggeredHomeAdapter(StaggeredGridLayoutActivity.this, mDatas4Danpin, mResult, mPosition4Danpin);
+                mStaggeredHomeAdapter = new StaggeredHomeAdapter(
+                        StaggeredGridLayoutActivity.this
+                        , mDatas4Danpin
+                        , mResult
+                        , mPosition4Danpin);
                 break;
             case MenuTea:
-                for (int i = 0; i < mResult.size(); i++) {
-                    if (mResult.get(i).getInt("type") == 4 || mResult.get(i).getInt("type") == 5) {
-                        mDatas4Tea.add(mResult.get(i).getString("name"));
-                        mPosition4Tea.add(i);
+                if (mDatas4Tea.size() == 0) {
+                    for (int i = 0; i < mResult.size(); i++) {
+                        if (mResult.get(i).getInt("type") == 4 || mResult.get(i).getInt("type") == 5) {
+                            mDatas4Tea.add(mResult.get(i).getString("name"));
+                            mPosition4Tea.add(i);
+                        }
                     }
                 }
-                mStaggeredHomeAdapter = new StaggeredHomeAdapter(StaggeredGridLayoutActivity.this, mDatas4Tea, mResult, mPosition4Tea);
+                mStaggeredHomeAdapter = new StaggeredHomeAdapter(
+                        StaggeredGridLayoutActivity.this
+                        , mDatas4Tea
+                        , mResult
+                        , mPosition4Tea);
                 break;
             case MenuYinLiao:
-                for (int i = 0; i < mResult.size(); i++) {
-                    if (mResult.get(i).getInt("type") == 6) {
-                        mDatas4YinLiao.add(mResult.get(i).getString("name"));
-                        mPosition4YinLiao.add(i);
+                if (mDatas4YinLiao.size() == 0) {
+                    for (int i = 0; i < mResult.size(); i++) {
+                        if (mResult.get(i).getInt("type") == 6) {
+                            mDatas4YinLiao.add(mResult.get(i).getString("name"));
+                            mPosition4YinLiao.add(i);
+                        }
                     }
                 }
-                mStaggeredHomeAdapter = new StaggeredHomeAdapter(StaggeredGridLayoutActivity.this, mDatas4YinLiao, mResult, mPosition4YinLiao);
+                mStaggeredHomeAdapter = new StaggeredHomeAdapter(
+                        StaggeredGridLayoutActivity.this
+                        , mDatas4YinLiao
+                        , mResult
+                        , mPosition4YinLiao);
                 break;
             case MenuLingShi:
-                for (int i = 0; i < mResult.size(); i++) {
-                    if (mResult.get(i).getInt("type") == 7) {
-                        mDatas4LingShi.add(mResult.get(i).getString("name"));
-                        mPosition4LingShi.add(i);
+                if (mDatas4LingShi.size() == 0) {
+                    for (int i = 0; i < mResult.size(); i++) {
+                        if (mResult.get(i).getInt("type") == 7) {
+                            mDatas4LingShi.add(mResult.get(i).getString("name"));
+                            mPosition4LingShi.add(i);
+                        }
                     }
                 }
-                mStaggeredHomeAdapter = new StaggeredHomeAdapter(StaggeredGridLayoutActivity.this, mDatas4LingShi, mResult, mPosition4LingShi);
+                mStaggeredHomeAdapter = new StaggeredHomeAdapter(
+                        StaggeredGridLayoutActivity.this
+                        , mDatas4LingShi
+                        , mResult
+                        , mPosition4LingShi);
                 break;
             case MenuXiaoChi:
-                for (int i = 0; i < mResult.size(); i++) {
-                    if (mResult.get(i).getInt("type") == 8) {
-                        mDatas4XiaoChi.add(mResult.get(i).getString("name"));
-                        mPosition4XiaoChi.add(i);
+                if (mDatas4XiaoChi.size() == 0) {
+                    for (int i = 0; i < mResult.size(); i++) {
+                        if (mResult.get(i).getInt("type") == 8) {
+                            mDatas4XiaoChi.add(mResult.get(i).getString("name"));
+                            mPosition4XiaoChi.add(i);
+                        }
                     }
                 }
-                mStaggeredHomeAdapter = new StaggeredHomeAdapter(StaggeredGridLayoutActivity.this, mDatas4XiaoChi, mResult, mPosition4XiaoChi);
+                mStaggeredHomeAdapter = new StaggeredHomeAdapter(
+                        StaggeredGridLayoutActivity.this
+                        , mDatas4XiaoChi
+                        , mResult
+                        , mPosition4XiaoChi);
                 break;
             case MenuPiGuo:
-                for (int i = 0; i < mResult.size(); i++) {
-                    if (mResult.get(i).getInt("type") == 9) {
-                        mDatas4PiGuo.add(mResult.get(i).getString("name"));
-                        mPosition4PiGuo.add(i);
+                if (mDatas4PiGuo.size() == 0) {
+                    for (int i = 0; i < mResult.size(); i++) {
+                        if (mResult.get(i).getInt("type") == 9) {
+                            mDatas4PiGuo.add(mResult.get(i).getString("name"));
+                            mPosition4PiGuo.add(i);
+                        }
                     }
                 }
-                mStaggeredHomeAdapter = new StaggeredHomeAdapter(StaggeredGridLayoutActivity.this, mDatas4PiGuo, mResult, mPosition4PiGuo);
+                mStaggeredHomeAdapter = new StaggeredHomeAdapter(
+                        StaggeredGridLayoutActivity.this
+                        , mDatas4PiGuo
+                        , mResult
+                        , mPosition4PiGuo);
                 break;
             case MenuXiaRi:
-                for (int i = 0; i < mResult.size(); i++) {
-                    if (mResult.get(i).getInt("type") == 10) {
-                        mDatas4XiaRi.add(mResult.get(i).getString("name"));
-                        mPosition4XiaRi.add(i);
+                if (mDatas4XiaRi.size() == 0) {
+                    for (int i = 0; i < mResult.size(); i++) {
+                        if (mResult.get(i).getInt("type") == 10) {
+                            mDatas4XiaRi.add(mResult.get(i).getString("name"));
+                            mPosition4XiaRi.add(i);
+                        }
                     }
                 }
-                mStaggeredHomeAdapter = new StaggeredHomeAdapter(StaggeredGridLayoutActivity.this, mDatas4XiaRi, mResult, mPosition4XiaRi);
+                mStaggeredHomeAdapter = new StaggeredHomeAdapter(
+                        StaggeredGridLayoutActivity.this
+                        , mDatas4XiaRi
+                        , mResult
+                        , mPosition4XiaRi);
                 break;
             default:
                 break;
@@ -456,7 +504,7 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity implements Na
                 int sum = 0;
                 ArrayList<String> temp = new ArrayList<String>();
                 for (int i = 0; i < Config.Amount; i++) {
-                    if (isGetAda[i] == true) {
+                    if (isGetAda[i]) {
                         mAdapter[i].setmAmount();
                         sum += mAdapter[i].getAmount();
                         temp.addAll(mAdapter[i].getResult());
@@ -473,14 +521,14 @@ public class StaggeredGridLayoutActivity extends ActionBarActivity implements Na
                 startActivity(intent);
                 return true;
             case R.id.id_action_reload:
-                for (int i = 0; i < Config.Amount; i++) {
+                /*for (int i = 0; i < Config.Amount; i++) {
                     if (isGetAda[i] == true) {
                         mAdapter[i].removeAll();
                         mAdapter[i].removeAllResult();
                     }
                 }
                 LeanSave();
-                init();
+                init();*/
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

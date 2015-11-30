@@ -31,6 +31,7 @@ class StaggeredHomeAdapter extends
     private Consumption mCon;
     private List<String> mDatas;//每一组商品的名称
     private List<Integer> mReal;
+    SweetAlertDialog pDialog = null;
 
     public interface OnItemClickLitener {
         void onItemClick(View view, int pos, Consumption mCon);
@@ -107,7 +108,7 @@ class StaggeredHomeAdapter extends
                     if (mCon.getmSum(pos) == 0) {//设定为预定态
                         setType2(holder);
                     }
-                    SweetAlertDialog pDialog = null;
+
                     if (type == 2) {//seekbar_two
                         pDialog = new SweetAlertDialog(now, SweetAlertDialog.SEEKBAR_TWO)
                                 .setTitleText("");
@@ -135,25 +136,23 @@ class StaggeredHomeAdapter extends
                     }
                     pDialog.setCancelable(true);
                     pDialog.setCanceledOnTouchOutside(true);
-                    final SweetAlertDialog finalPDialog2 = pDialog;
                     pDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                         @Override
                         public void onCancel(DialogInterface dialog) {
-                            finalPDialog2.dismiss();
+                            pDialog.dismiss();
                         }
                     });
                     pDialog.show();
                     pDialog.setFirst(mCon.getcoldNum(pos));
                     if (type == 2) {
                         pDialog.setSecond(mCon.gethotNum(pos));
-                        final SweetAlertDialog finalPDialog = pDialog;
                         pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                finalPDialog.dismiss();
-                                mCon.setColdNum(pos, finalPDialog.getFirst());
-                                mCon.setHotNum(pos, finalPDialog.getSecond());
-                                mCon.setmSum(pos, finalPDialog.getFirst() + finalPDialog.getSecond());
+                                pDialog.dismiss();
+                                mCon.setColdNum(pos, pDialog.getFirst());
+                                mCon.setHotNum(pos, pDialog.getSecond());
+                                mCon.setmSum(pos, pDialog.getFirst() + pDialog.getSecond());
                                 if (mCon.getmSum(pos) != 0) {
                                     holder.tv_sum.setText("数量:" + mCon.getmSum(pos));
                                 } else {
@@ -162,13 +161,12 @@ class StaggeredHomeAdapter extends
                             }
                         });
                     } else {
-                        final SweetAlertDialog finalPDialog1 = pDialog;
                         pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                finalPDialog1.dismiss();
-                                mCon.setColdNum(pos, finalPDialog1.getFirst());
-                                mCon.setmSum(pos, finalPDialog1.getFirst());
+                                pDialog.dismiss();
+                                mCon.setColdNum(pos, pDialog.getFirst());
+                                mCon.setmSum(pos, pDialog.getFirst());
                                 if (mCon.getmSum(pos) != 0) {
                                     holder.tv_sum.setText("数量:" + mCon.getmSum(pos));
                                 } else {
